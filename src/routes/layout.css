@@ -3,8 +3,9 @@
 @theme {
 	--color-bg: #f7e9d1;
 	--color-text: #8c4e43;
+	--color-white: #fff;
 }
 
 :root {
-	@apply text-text bg-bg;
+	@apply bg-bg text-text;
 }

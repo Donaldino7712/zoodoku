@@ -37,6 +37,36 @@ export class Board {
 
 		throw new Error('unable to generate an easily solvable Zoodoku board');
 	}
+
+	applyRulesAsChecks(): void {
+		const animalChoices: Array<[number, number]> = [];
+		for (let y = 0; y < this.cells.length; y += 1)
+			for (let x = 0; x < this.cells[y].length; x += 1)
+				if (this.cells[y][x].userstate === 'animal') animalChoices.push([x, y]);
+
+		const cross = (cell: Cell | undefined): void => {
+			if (cell && cell.userstate !== 'animal' && cell.userstate !== 'misflagged')
+				cell.userstate = 'crossed';
+		};
+
+		for (const [animalX, animalY] of animalChoices) {
+			const animal = this.cells[animalY][animalX];
+
+			for (let x = 0; x < this.cells[animalY].length; x += 1)
+				if (x !== animalX) cross(this.cells[animalY][x]);
+			for (let y = 0; y < this.cells.length; y += 1)
+				if (y !== animalY) cross(this.cells[y][animalX]);
+
+			for (const row of this.cells)
+				for (const cell of row) if (cell.group === animal.group && cell !== animal) cross(cell);
+
+			for (const y of [animalY - 1, animalY + 1]) {
+				const row = this.cells[y];
+				if (!row) continue;
+				for (let x = animalX - 1; x <= animalX + 1; x += 1) cross(row[x]);
+			}
+		}
+	}
 }
 
 function hasUniqueSolution(cells: Cell[][]): boolean {

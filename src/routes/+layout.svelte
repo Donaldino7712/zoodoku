@@ -4,6 +4,24 @@
 	import type { LayoutProps } from './$types';
 
 	let { children }: LayoutProps = $props();
+
+	function detectForcedDarkMode() {
+		if (
+			!navigator.userAgent.match(/Samsung/i) ||
+			!window.matchMedia ||
+			window.matchMedia('(prefers-color-scheme:dark)').matches
+		)
+			return false;
+		const ctx = document.createElement('canvas').getContext('2d');
+		if (!ctx) return false;
+		const img = new Image();
+		img.src =
+			'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IndoaXRlIi8+PC9zdmc+';
+		if (!img.complete) img.dispatchEvent(new Event('load'));
+		ctx.drawImage(img, 0, 0);
+		const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+		return (r & b & g) < 255;
+	}
 </script>
 
 <svelte:head>
@@ -11,4 +29,14 @@
 	<title>Zoodoku</title>
 </svelte:head>
 
-{@render children()}
+{#if detectForcedDarkMode()}
+	<main class="flex min-h-dvh flex-col items-center justify-center p-4">
+		<p>
+			Sorry, but due to a bug in Samsung Browser which messes up colors, this game is practically
+			unplayable. Please use a different browser, like Chrome. Alternatively, disable dark mode and
+			refresh the page.
+		</p>
+	</main>
+{:else}
+	{@render children()}
+{/if}

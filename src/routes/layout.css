@@ -9,3 +9,7 @@
 :root {
 	@apply bg-bg text-text;
 }
+
+@utility clicky {
+	@apply transition-transform duration-200 active:scale-95;
+}

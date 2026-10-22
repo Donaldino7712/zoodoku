@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Board } from '#lib/game/index.ts';
+	import { Board } from '#lib/game/index.svelte.ts';
 	import Zoodoku from '#lib/game/Zoodoku.svelte';
 	import type { PageProps } from './$types';
 

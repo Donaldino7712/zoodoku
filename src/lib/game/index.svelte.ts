@@ -1,12 +1,7 @@
 export class Board {
 	/** cells[y][x] */
-	cells: Cell[][];
-	groupHues: number[];
-
-	constructor() {
-		this.cells = [];
-		this.groupHues = [];
-	}
+	cells = $state<Cell[][]>([]);
+	groupHues = $state<number[]>([]);
 
 	static generateGame(size: number, seed: number): Board {
 		if (!Number.isInteger(size) || size < 1)
@@ -41,6 +36,8 @@ export interface Cell {
 	animal: boolean;
 	/** if the cell has been crossed out by the user */
 	crossed?: boolean;
+	/** if the user mismarked the cell as an animal */
+	mismarked?: boolean;
 }
 
 function findNonTouchingPermutation(size: number, random: () => number): number[] {

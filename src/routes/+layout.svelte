@@ -8,6 +8,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>Zoodoku</title>
 </svelte:head>
 
 {@render children()}

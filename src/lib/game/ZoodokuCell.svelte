@@ -4,6 +4,7 @@
 
 	let {
 		cell,
+		onTouchStart,
 		hue,
 		topLeft = false,
 		topRight = false,
@@ -12,6 +13,7 @@
 		seed
 	}: {
 		cell: Cell;
+		onTouchStart: (event: TouchEvent) => void;
 		hue: number;
 		topLeft?: boolean;
 		topRight?: boolean;
@@ -20,16 +22,62 @@
 		seed: number;
 	} = $props();
 
-	let dblclick = $state(false);
-	let timeout: ReturnType<typeof setTimeout> | undefined = undefined;
-	$effect(() => {
-		if (dblclick) timeout = setTimeout(() => (dblclick = false), 300);
-		else clearTimeout(timeout);
-	});
+	let suppressTouchClick = false;
+	let suppressTouchClickTimeout: ReturnType<typeof setTimeout> | undefined;
+	let lastClickAt = 0;
+	let clickTimeout: ReturnType<typeof setTimeout> | undefined;
+	let lastTouchAt = 0;
+	let touchTimeout: ReturnType<typeof setTimeout> | undefined;
+
+	function toggleCell(): void {
+		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
+		cell.userstate = cell.userstate === 'crossed' ? undefined : 'crossed';
+	}
+
+	function handleTouchStart(event: TouchEvent): void {
+		const now = Date.now();
+		const isDoubleTap = now - lastTouchAt < 300;
+		lastTouchAt = now;
+		clearTimeout(touchTimeout);
+		touchTimeout = setTimeout(() => (lastTouchAt = 0), 300);
+
+		suppressTouchClick = true;
+		clearTimeout(suppressTouchClickTimeout);
+		suppressTouchClickTimeout = setTimeout(() => (suppressTouchClick = false), 500);
+		onTouchStart(event);
+
+		if (isDoubleTap && cell.userstate !== 'animal' && cell.userstate !== 'misflagged') {
+			cell.userstate = cell.animal ? 'animal' : 'misflagged';
+		}
+	}
+
+	function handleClick(): void {
+		if (suppressTouchClick) {
+			suppressTouchClick = false;
+			clearTimeout(suppressTouchClickTimeout);
+			return;
+		}
+
+		const now = Date.now();
+		if (now - lastClickAt < 300) {
+			clearTimeout(clickTimeout);
+			lastClickAt = 0;
+			if (cell.userstate !== 'animal' && cell.userstate !== 'misflagged') {
+				cell.userstate = cell.animal ? 'animal' : 'misflagged';
+			}
+			return;
+		}
+
+		toggleCell();
+		lastClickAt = now;
+		clearTimeout(clickTimeout);
+		clickTimeout = setTimeout(() => (lastClickAt = 0), 300);
+	}
 </script>
 
 <button
 	style="background-color: hsl({hue} 46% 67%);"
+	ontouchstart={handleTouchStart}
 	class={[
 		'flex aspect-square size-full min-h-8 min-w-8 items-center',
 		'relative clicky justify-center rounded-lg',
@@ -39,12 +87,7 @@
 		bottomLeft && 'rounded-bl-xl',
 		bottomRight && 'rounded-br-xl'
 	]}
-	onclick={() => {
-		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
-		if (dblclick) cell.userstate = cell.animal ? 'animal' : 'misflagged';
-		else cell.userstate = cell.userstate === 'crossed' ? undefined : 'crossed';
-		dblclick = true;
-	}}
+	onclick={handleClick}
 >
 	{#if cell.userstate === 'animal'}
 		🐱

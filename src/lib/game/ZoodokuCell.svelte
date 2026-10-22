@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { draw, scale } from 'svelte/transition';
 	import type { Cell } from './index.svelte';
+	import cat from '#lib/assets/cat.svg';
 
 	let {
 		cell,
@@ -90,7 +91,7 @@
 	onclick={handleClick}
 >
 	{#if cell.userstate === 'animal'}
-		🐱
+		<img src={cat} alt="Successfully found!" class="size-1/2" />
 	{/if}
 	{@render cross(cell.userstate === 'misflagged', 'text-error')}
 	{@render cross(cell.userstate === 'crossed', 'text-white')}

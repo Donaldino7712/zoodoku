@@ -2,6 +2,7 @@ export class Board {
 	/** cells[y][x] */
 	cells = $state<Cell[][]>([]);
 	groupHues = $state<number[]>([]);
+	seed = 0;
 
 	static generateGame(size: number, seed: number): Board {
 		if (!Number.isInteger(size) || size < 1)
@@ -11,6 +12,7 @@ export class Board {
 		const groups = size; // TODO: should groups be untied from size?
 		const random = seededRandom(seed);
 		const board = new Board();
+		board.seed = seed;
 		const cells = Array.from({ length: size }, () =>
 			Array.from({ length: size }, () => ({ group: -1, animal: false }))
 		);
@@ -34,10 +36,7 @@ export class Board {
 export interface Cell {
 	group: number;
 	animal: boolean;
-	/** if the cell has been crossed out by the user */
-	crossed?: boolean;
-	/** if the user mismarked the cell as an animal */
-	mismarked?: boolean;
+	userstate?: 'crossed' | 'animal' | 'misflagged';
 }
 
 function findNonTouchingPermutation(size: number, random: () => number): number[] {

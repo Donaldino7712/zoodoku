@@ -4,6 +4,7 @@
 	--color-bg: #f7e9d1;
 	--color-text: #8c4e43;
 	--color-white: #fff;
+	--color-error: #f9475a;
 }
 
 :root {
@@ -11,5 +12,5 @@
 }
 
 @utility clicky {
-	@apply transition-transform duration-200 active:scale-95;
+	@apply transition-transform duration-200 not-disabled:active:scale-95;
 }

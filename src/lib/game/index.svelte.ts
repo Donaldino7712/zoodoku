@@ -13,24 +13,68 @@ export class Board {
 		const random = seededRandom(seed);
 		const board = new Board();
 		board.seed = seed;
-		const cells = Array.from({ length: size }, () =>
-			Array.from({ length: size }, () => ({ group: -1, animal: false }))
-		);
 
-		// one solution is a permutation; one animal in every row and column
-		// choosing it with this constraint also enforces the no-touching rule
-		const animalColumns = findNonTouchingPermutation(size, random);
-		for (let y = 0; y < size; y += 1) {
-			const x = animalColumns[y];
-			cells[y][x].animal = true;
-			cells[y][x].group = y;
+		// eep generating until the board has exactly one solution
+		for (let attempt = 0; attempt < 10_000; attempt += 1) {
+			const cells = Array.from({ length: size }, () =>
+				Array.from({ length: size }, () => ({ group: -1, animal: false }))
+			);
+
+			const animalColumns = findNonTouchingPermutation(size, random);
+			for (let y = 0; y < size; y += 1) {
+				const x = animalColumns[y];
+				cells[y][x].animal = true;
+				cells[y][x].group = y;
+			}
+
+			growRegions(cells, size, random);
+			if (!hasUniqueSolution(cells)) continue;
+
+			board.groupHues = chooseGroupHues(cells, groups, random);
+			board.cells = cells;
+			return board;
 		}
 
-		growRegions(cells, size, random);
-		board.groupHues = chooseGroupHues(cells, groups, random);
-		board.cells = cells;
-		return board;
+		throw new Error('unable to generate an easily solvable Zoodoku board');
 	}
+}
+
+function hasUniqueSolution(cells: Cell[][]): boolean {
+	const size = cells.length;
+	const usedColumns = new Set<number>();
+	const usedGroups = new Set<number>();
+	const placement: number[] = [];
+	let solutions = 0;
+
+	function search(row: number): boolean {
+		if (row === size) {
+			solutions += 1;
+			return solutions < 2;
+		}
+
+		for (let column = 0; column < size; column += 1) {
+			const group = cells[row][column].group;
+			if (
+				usedColumns.has(column) ||
+				usedGroups.has(group) ||
+				(row > 0 && Math.abs(column - placement[row - 1]) < 2)
+			) {
+				continue;
+			}
+
+			usedColumns.add(column);
+			usedGroups.add(group);
+			placement[row] = column;
+			if (!search(row + 1) && solutions > 1) return false;
+			usedColumns.delete(column);
+			usedGroups.delete(group);
+		}
+
+		return true;
+	}
+
+	search(0);
+	return solutions === 1;
 }
 
 export interface Cell {

@@ -40,3 +40,15 @@
 @utility clicky {
 	@apply transition-transform duration-200 not-disabled:active:scale-95;
 }
+
+.animal-art {
+	filter:
+		drop-shadow(1px 0 0 #fff)
+		drop-shadow(-1px 0 0 #fff)
+		drop-shadow(0 1px 0 #fff)
+		drop-shadow(0 -1px 0 #fff)
+		drop-shadow(1px 1px 0 #fff)
+		drop-shadow(-1px 1px 0 #fff)
+		drop-shadow(1px -1px 0 #fff)
+		drop-shadow(-1px -1px 0 #fff);
+}

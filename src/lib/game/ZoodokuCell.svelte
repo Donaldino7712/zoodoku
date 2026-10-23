@@ -122,7 +122,7 @@
 		<img
 			src={animal}
 			alt="Successfully found!"
-			class="pointer-events-none absolute size-3/4"
+			class="animal-art pointer-events-none absolute size-3/4"
 			in:scale={{ duration: 300, easing: backOut }}
 			out:scale={{ duration: 300 }}
 		/>

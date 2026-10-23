@@ -1,13 +1,21 @@
 <script lang="ts">
 	import { confetti } from '@tsparticles/confetti';
 	import { draw, scale } from 'svelte/transition';
-	import type { Cell } from './index.svelte';
+	import type { Board, Cell } from './index.svelte';
 	import { backOut } from 'svelte/easing';
 	import { playSound } from '#lib/audio.ts';
+	import { vibrate } from '#lib/config.svelte.ts';
+
+	export type DragAction = 'cross' | 'uncross';
+	export type DragState = { action: DragAction } | undefined;
 
 	let {
 		cell,
-		onTouchStart,
+		board,
+		dragState = $bindable<DragState>(),
+		row,
+		column,
+		boardElement,
 		hue,
 		topLeft = false,
 		topRight = false,
@@ -18,7 +26,11 @@
 		highlight = false
 	}: {
 		cell: Cell;
-		onTouchStart: (event: TouchEvent) => void;
+		board: Board;
+		dragState?: DragState;
+		row: number;
+		column: number;
+		boardElement?: HTMLDivElement;
 		hue: number;
 		topLeft?: boolean;
 		topRight?: boolean;
@@ -31,6 +43,7 @@
 
 	let suppressTouchClick = false;
 	let suppressTouchClickTimeout: ReturnType<typeof setTimeout> | undefined;
+	let suppressMouseClick = false;
 	let lastClickAt = 0;
 	let clickTimeout: ReturnType<typeof setTimeout> | undefined;
 	let lastTouchAt = 0;
@@ -65,7 +78,71 @@
 		if (!cell.animal) onerror?.();
 	}
 
-	function handleTouchStart(event: TouchEvent): void {
+	function cellFromTouch(touch: Touch): { row: number; column: number } | undefined {
+		const element = document.elementFromPoint(touch.clientX, touch.clientY);
+		const button = element?.closest<HTMLButtonElement>('button[data-row][data-column]');
+		if (!button || !boardElement?.contains(button)) return;
+
+		return {
+			row: Number(button.dataset.row),
+			column: Number(button.dataset.column)
+		};
+	}
+
+	function applyDrag(row: number, column: number, action: DragAction): void {
+		const targetCell = board.cells[row]?.[column];
+		if (!targetCell || targetCell.userstate === 'animal' || targetCell.userstate === 'misflagged')
+			return;
+		if ((targetCell.userstate === 'crossed') === (action === 'cross')) return;
+		if (vibrate.current) navigator.vibrate?.(1);
+		if (action === 'cross') playSound('scribble');
+		targetCell.userstate = action === 'cross' ? 'crossed' : undefined;
+	}
+
+	function handleDragStart(event: Event): void {
+		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
+
+		event.preventDefault();
+		const action = cell.userstate === 'crossed' ? 'uncross' : 'cross';
+		dragState = { action };
+		applyDrag(row, column, action);
+	}
+
+	function handleTouchMove(event: TouchEvent): void {
+		if (!dragState) return;
+
+		const touch = event.touches[0];
+		if (!touch) return;
+
+		event.preventDefault();
+		const position = cellFromTouch(touch);
+		if (position) applyDrag(position.row, position.column, dragState.action);
+	}
+
+	function handleTouchEnd(): void {
+		dragState = undefined;
+	}
+
+	function handleMouseDown(event: MouseEvent): void {
+		if (event.button !== 0) return;
+		if (Date.now() - lastTouchAt < 500) return;
+
+		suppressMouseClick = Date.now() - lastClickAt >= 300;
+		handleDragStart(event);
+	}
+
+	function handleMouseMove(event: MouseEvent): void {
+		if (!dragState || !(event.buttons & 1)) return;
+
+		event.preventDefault();
+		applyDrag(row, column, dragState.action);
+	}
+
+	function handleMouseUp(): void {
+		dragState = undefined;
+	}
+
+	function handleCellTouchStart(event: TouchEvent): void {
 		const now = Date.now();
 		const isDoubleTap = now - lastTouchAt < 300;
 		lastTouchAt = now;
@@ -75,7 +152,7 @@
 		suppressTouchClick = true;
 		clearTimeout(suppressTouchClickTimeout);
 		suppressTouchClickTimeout = setTimeout(() => (suppressTouchClick = false), 500);
-		onTouchStart(event);
+		handleDragStart(event);
 
 		if (isDoubleTap) markCell();
 	}
@@ -84,6 +161,14 @@
 		if (suppressTouchClick) {
 			suppressTouchClick = false;
 			clearTimeout(suppressTouchClickTimeout);
+			return;
+		}
+
+		if (suppressMouseClick) {
+			suppressMouseClick = false;
+			lastClickAt = Date.now();
+			clearTimeout(clickTimeout);
+			clickTimeout = setTimeout(() => (lastClickAt = 0), 300);
 			return;
 		}
 
@@ -103,8 +188,16 @@
 </script>
 
 <button
+	data-row={row}
+	data-column={column}
 	style="background-color: hsl({hue} var(--cell-sat) var(--cell-lum));"
-	ontouchstart={handleTouchStart}
+	ontouchstart={handleCellTouchStart}
+	ontouchmove={handleTouchMove}
+	ontouchend={handleTouchEnd}
+	ontouchcancel={handleTouchEnd}
+	onmousedown={handleMouseDown}
+	onmousemove={handleMouseMove}
+	onmouseup={handleMouseUp}
 	class={[
 		'flex aspect-square size-full min-h-1 min-w-1 items-center',
 		'relative clicky justify-center rounded-lg',

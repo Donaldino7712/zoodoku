@@ -106,7 +106,7 @@
 	style="background-color: hsl({hue} var(--cell-sat) var(--cell-lum));"
 	ontouchstart={handleTouchStart}
 	class={[
-		'flex aspect-square size-full min-h-4 min-w-4 items-center',
+		'flex aspect-square size-full min-h-1 min-w-1 items-center',
 		'relative clicky justify-center rounded-lg',
 		highlight && 'z-10 ring-4 ring-error ring-offset-2',
 		topLeft && 'rounded-tl-xl',

@@ -3,7 +3,10 @@
 	import { Board } from '#lib/game/index.svelte.ts';
 	import Zoodoku from '#lib/game/Zoodoku.svelte';
 	import type { PageProps } from './$types';
+	import Counter from './Counter.svelte';
 	import Lives from './Lives.svelte';
+	import LossOverlay from './LossOverlay.svelte';
+	import WinOverlay from './WinOverlay.svelte';
 
 	let { params }: PageProps = $props();
 
@@ -17,10 +20,17 @@
 	let lives = $derived((params.lvl, 3));
 </script>
 
+<WinOverlay visible={board.won} next={params.lvl + 1} />
+<LossOverlay
+	visible={lives <= 0}
+	retry={() => ((lives = 3), (board = Board.generateGame(boardSize, 1610612741 * params.lvl)))}
+/>
+
 <main class="mx-auto grid max-h-dvh min-h-dvh max-w-2xl grid-rows-[auto_auto_1fr]">
 	<div class="p-8">
 		<h2 class="text-center font-bold">Level {params.lvl}</h2>
 		<Lives {lives} max={3} />
+		<Counter found={board.found} max={boardSize} animal={getAnimal(params.lvl)} />
 	</div>
 
 	{#if board}

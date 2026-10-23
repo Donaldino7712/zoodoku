@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { confetti } from '@tsparticles/confetti';
 	import { draw, scale } from 'svelte/transition';
 	import type { Cell } from './index.svelte';
 	import { backOut } from 'svelte/easing';
@@ -32,6 +33,7 @@
 	let lastTouchAt = 0;
 	let touchTimeout: ReturnType<typeof setTimeout> | undefined;
 
+	let el = $state<HTMLButtonElement>();
 	function toggleCell(): void {
 		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
 		cell.userstate = cell.userstate === 'crossed' ? undefined : 'crossed';
@@ -40,6 +42,19 @@
 	function markCell(): void {
 		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
 		cell.userstate = cell.animal ? 'animal' : 'misflagged';
+		if (cell.animal && el) {
+			const rect = el.getBoundingClientRect();
+			confetti({
+				particleCount: 12,
+				startVelocity: 10,
+				ticks: 100,
+				spread: 360,
+				origin: {
+					y: (rect.top + rect.height / 2) / window.innerHeight,
+					x: (rect.left + rect.width / 2) / window.innerWidth
+				}
+			});
+		}
 		if (!cell.animal) onerror?.();
 	}
 
@@ -93,6 +108,7 @@
 	]}
 	disabled={cell.userstate === 'animal' || cell.userstate === 'misflagged'}
 	onclick={handleClick}
+	bind:this={el}
 >
 	{#if cell.userstate === 'animal'}
 		<img

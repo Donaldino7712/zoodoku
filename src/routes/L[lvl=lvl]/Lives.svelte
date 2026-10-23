@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { expoIn } from 'svelte/easing';
 	import { scale } from 'svelte/transition';
 
 	let { lives, max }: { lives: number; max: number } = $props();

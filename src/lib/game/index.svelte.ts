@@ -3,6 +3,7 @@ export class Board {
 	cells = $state<Cell[][]>([]);
 	groupHues = $state<number[]>([]);
 	seed = 0;
+	size = $derived(this.cells.length);
 
 	static generateGame(size: number, seed: number): Board {
 		if (!Number.isInteger(size) || size < 1)
@@ -36,6 +37,13 @@ export class Board {
 		}
 
 		throw new Error('unable to generate an easily solvable Zoodoku board');
+	}
+
+	get found() {
+		return this.cells.flat().filter((cell) => cell.userstate === 'animal').length;
+	}
+	get won() {
+		return this.found >= this.size;
 	}
 
 	applyRulesAsChecks(): void {

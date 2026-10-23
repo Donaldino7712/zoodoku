@@ -26,7 +26,8 @@
 	function applySwipe(row: number, column: number, action: SwipeAction): void {
 		const cell = p.board.cells[row]?.[column];
 		if (!cell || cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
-
+		if ((cell.userstate === 'crossed') === (action === 'cross')) return;
+		navigator.vibrate?.(1);
 		cell.userstate = action === 'cross' ? 'crossed' : undefined;
 	}
 
@@ -56,7 +57,7 @@
 </script>
 
 <div
-	class="flex touch-none flex-col gap-1 rounded-3xl bg-white p-3"
+	class="flex touch-none flex-col gap-1 rounded-3xl bg-white p-3 drop-shadow"
 	bind:this={boardElement}
 	role="group"
 	ontouchmove={continueSwipe}

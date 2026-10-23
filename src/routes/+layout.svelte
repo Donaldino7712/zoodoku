@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import type { LayoutProps } from './$types';
+	import { page } from '$app/state';
 	import { theme } from '#lib/config.svelte.ts';
 
 	let { children }: LayoutProps = $props();
@@ -37,6 +38,16 @@
 <svelte:head>
 	<link rel="icon" href="/icons/icon.svg" />
 	<meta name="theme-color" content="#f7e9d1" />
+	<meta name="description" content="please play my game (^v^)~" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Zoodoku" />
+	<meta property="og:description" content="please play my game (^v^)~" />
+	<meta property="og:url" content={page.url.href} />
+	<meta property="og:image" content={`${page.url.origin}/icons/icon-512.png`} />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Zoodoku" />
+	<meta name="twitter:description" content="please play my game (^v^)~" />
+	<meta name="twitter:image" content={`${page.url.origin}/icons/icon-512.png`} />
 	<title>Zoodoku</title>
 </svelte:head>
 

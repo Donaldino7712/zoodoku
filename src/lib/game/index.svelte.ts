@@ -46,15 +46,19 @@ export class Board {
 		return this.found >= this.size;
 	}
 
-	applyRulesAsChecks(): void {
+	applyRulesAsChecks(): boolean {
+		let changed = false;
+
 		const animalChoices: Array<[number, number]> = [];
 		for (let y = 0; y < this.cells.length; y += 1)
 			for (let x = 0; x < this.cells[y].length; x += 1)
 				if (this.cells[y][x].userstate === 'animal') animalChoices.push([x, y]);
 
 		const cross = (cell: Cell | undefined): void => {
-			if (cell && cell.userstate !== 'animal' && cell.userstate !== 'misflagged')
+			if (cell && cell.userstate !== 'animal' && cell.userstate !== 'misflagged') {
+				if (cell.userstate !== 'crossed') changed = true;
 				cell.userstate = 'crossed';
+			}
 		};
 
 		for (const [animalX, animalY] of animalChoices) {
@@ -74,6 +78,24 @@ export class Board {
 				for (let x = animalX - 1; x <= animalX + 1; x += 1) cross(row[x]);
 			}
 		}
+
+		return changed;
+	}
+	discoverRandomAnimal(): boolean {
+		const animals = this.cells.flat().filter((cell) => cell.animal && cell.userstate !== 'animal');
+		if (animals.length === 0) return false;
+		const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+		randomAnimal.userstate = 'animal';
+		return true;
+	}
+	crossRandomCells(n: number): boolean {
+		const cells = this.cells.flat().filter((cell) => !cell.userstate && !cell.animal);
+		if (cells.length === 0) return false;
+		for (let i = 0; i < n; i += 1) {
+			const randomCell = cells[Math.floor(Math.random() * cells.length)];
+			randomCell.userstate = 'crossed';
+		}
+		return true;
 	}
 }
 

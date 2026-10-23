@@ -6,6 +6,10 @@
 	import Counter from './Counter.svelte';
 	import Lives from './Lives.svelte';
 	import LossOverlay from './LossOverlay.svelte';
+	import PowerUp from '#lib/powerups/PowerUp.svelte';
+	import checks from '#lib/powerups/checks.svg';
+	import search from '#lib/powerups/search.svg';
+	import crossrandom from '#lib/powerups/crossrandom.svg';
 	import WinOverlay from './WinOverlay.svelte';
 
 	let { params }: PageProps = $props();
@@ -41,9 +45,12 @@
 		<div class="p-4">Loading...</div>
 	{/if}
 
-	<div class="flex items-center justify-center gap-2">
-		<button class="bg-layer p-4" onclick={() => board?.applyRulesAsChecks()}> apply rules </button>
-
+	<div class="flex items-center justify-center gap-4">
+		<PowerUp apply={() => board?.applyRulesAsChecks()} cooldown={10} icon={checks} />
+		<PowerUp apply={() => board?.discoverRandomAnimal()} cooldown={30} icon={search} />
+		<PowerUp apply={() => board?.crossRandomCells(5)} cooldown={30} icon={crossrandom} />
+	</div>
+	<div class="flex">
 		<a href="/L{params.lvl - 1}" class="bg-layer p-4">prev</a>
 		<a href="/L{params.lvl + 1}" class="bg-layer p-4">next</a>
 	</div>

@@ -25,6 +25,7 @@
 
 	$effect(() => {
 		document.documentElement.classList.toggle('dark', theme.current === 'dark');
+		document.documentElement.classList.toggle('dark-ctp', theme.current === 'dark-ctp');
 	});
 </script>
 

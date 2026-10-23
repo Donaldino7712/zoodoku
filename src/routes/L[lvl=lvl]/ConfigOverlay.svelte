@@ -83,10 +83,19 @@
 				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-					onclick={() => (theme.current = theme.current === 'dark' ? 'light' : 'dark')}
+					onclick={() => {
+						const next = {
+							light: 'dark',
+							dark: 'dark-ctp',
+							'dark-ctp': 'light'
+						} as const;
+						theme.current = next[theme.current];
+					}}
 				>
 					<span>Theme</span>
-					<span class="font-semibold">{theme.current === 'dark' ? 'Dark' : 'Light'}</span>
+					<span class="font-semibold">
+						{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[theme.current]}
+					</span>
 				</button>
 
 				{#if navigator.canShare?.({ text: sharetext })}

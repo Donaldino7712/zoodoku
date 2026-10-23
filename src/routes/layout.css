@@ -16,14 +16,25 @@
 }
 .dark {
 	color-scheme: dark;
-	--color-bg: #211d1c;
-	--color-text: #f3dfc4;
-	--color-white: #302a28;
-	--color-layer: #332d2a;
-	--color-depress: #5b4c45;
-	--color-error: #ff6675;
+	--color-bg: #181818;
+	--color-text: #ededed;
+	--color-white: #242424;
+	--color-layer: #303030;
+	--color-depress: #4a4a4a;
+	--color-error: #ff6b6b;
 	--cell-sat: 55%;
 	--cell-lum: 50%;
+}
+.dark-ctp {
+	color-scheme: dark;
+	--color-bg: #1e1e2e;
+	--color-text: #cdd6f4;
+	--color-white: #181825;
+	--color-layer: #313244;
+	--color-depress: #45475a;
+	--color-error: #f38ba8;
+	--cell-sat: 84%;
+	--cell-lum: 81%;
 }
 
 @utility clicky {

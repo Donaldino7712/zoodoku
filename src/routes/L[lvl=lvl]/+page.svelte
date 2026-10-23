@@ -14,7 +14,7 @@
 	});
 	let board = $derived(Board.generateGame(boardSize, 1610612741 * params.lvl));
 
-	let lives = $state(3);
+	let lives = $derived((params.lvl, 3));
 </script>
 
 <h2 class="pt-8 text-center font-bold">Level {params.lvl}</h2>

@@ -38,7 +38,8 @@
 		'Clean',
 		'Masterful',
 		'On point',
-		'Champion'
+		'Champion',
+		'Pawsome'
 	];
 	let randomEncouragement = $state('');
 

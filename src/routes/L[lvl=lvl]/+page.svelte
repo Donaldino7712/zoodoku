@@ -103,6 +103,9 @@
 					style={`width: ${progressPercent(generation.attempts)}%`}
 				></div>
 			</div>
+			{#if generation.attempts > typicalGenerationAttempts}
+				<p class="mt-4 text-sm text-text">This is taking a bit longer than usual. Get ready!</p>
+			{/if}
 		</div>
 	</main>
 {:else}

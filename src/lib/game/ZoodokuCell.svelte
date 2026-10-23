@@ -94,7 +94,7 @@
 		if (!targetCell || targetCell.userstate === 'animal' || targetCell.userstate === 'misflagged')
 			return;
 		if ((targetCell.userstate === 'crossed') === (action === 'cross')) return;
-		if (!barebones.current && vibrate.current) navigator.vibrate?.(1);
+		if (vibrate.current) navigator.vibrate?.(1);
 		if (action === 'cross') playSound('scribble');
 		targetCell.userstate = action === 'cross' ? 'crossed' : undefined;
 	}

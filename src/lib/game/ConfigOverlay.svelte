@@ -32,22 +32,20 @@
 			</button>
 
 			<div class="flex flex-col gap-2">
-				{#if !barebones.current}
-					<button
-						class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => toggle(audio)}
-						aria-pressed={audio.current}
-					>
-						<span>Audio</span><span class="font-semibold">{audio.current ? 'On' : 'Off'}</span>
-					</button>
-					<button
-						class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => toggle(vibrate)}
-						aria-pressed={vibrate.current}
-					>
-						<span>Vibrate</span><span class="font-semibold">{vibrate.current ? 'On' : 'Off'}</span>
-					</button>
-				{/if}
+				<button
+					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+					onclick={() => toggle(audio)}
+					aria-pressed={audio.current}
+				>
+					<span>Audio</span><span class="font-semibold">{audio.current ? 'On' : 'Off'}</span>
+				</button>
+				<button
+					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+					onclick={() => toggle(vibrate)}
+					aria-pressed={vibrate.current}
+				>
+					<span>Vibrate</span><span class="font-semibold">{vibrate.current ? 'On' : 'Off'}</span>
+				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
 					onclick={() => (toggle(barebones), (animations.current = true))}

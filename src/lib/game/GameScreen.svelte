@@ -1,12 +1,10 @@
 <script lang="ts">
 	import { playSound } from '#lib/audio.ts';
+	import { ChevronLeft, Dices, Grid2X2Check, Search } from '@lucide/svelte';
 	import ConfigOverlay from './ConfigOverlay.svelte';
 	import Counter from './Counter.svelte';
 	import Lives from './Lives.svelte';
 	import PowerUp from '#lib/powerups/PowerUp.svelte';
-	import checks from '#lib/powerups/checks.svg';
-	import search from '#lib/powerups/search.svg';
-	import crossrandom from '#lib/powerups/crossrandom.svg';
 	import Zoodoku from './Zoodoku.svelte';
 	import type { Board } from './index.svelte';
 
@@ -43,18 +41,7 @@
 	<div class="grid grid-cols-[auto_1fr_auto] p-8">
 		<div class="flex items-start">
 			<button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => history.back()}>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="lucide lucide-chevron-left preview-icon"><path d="m15 18-6-6 6-6" /></svg
-				>
+				<ChevronLeft class="preview-icon" />
 				<span class="sr-only">Back</span>
 			</button>
 		</div>
@@ -76,8 +63,8 @@
 	</div>
 
 	<div class="flex items-center justify-center gap-4">
-		<PowerUp apply={() => board.applyRulesAsChecks()} cooldown={10} icon={checks} />
-		<PowerUp apply={discoverAnimal} cooldown={30} icon={search} />
-		<PowerUp apply={() => board.crossRandomCells(5)} cooldown={30} icon={crossrandom} />
+		<PowerUp apply={() => board.applyRulesAsChecks()} cooldown={10} icon={Grid2X2Check} />
+		<PowerUp apply={discoverAnimal} cooldown={30} icon={Search} />
+		<PowerUp apply={() => board.crossRandomCells(5)} cooldown={30} icon={Dices} />
 	</div>
 </main>

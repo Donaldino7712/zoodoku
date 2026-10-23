@@ -25,13 +25,15 @@
 		"svelte-check": "^4.6.0",
 		"tailwindcss": "^4.3.0",
 		"typescript": "^6.0.3",
-		"vite": "^8.3.0"
+		"vite": "^8.3.0",
+		"vite-plugin-lucide-preprocess": "^1.9.0"
 	},
 	"imports": {
 		"#lib": "./src/lib/index.js",
 		"#lib/*": "./src/lib/*"
 	},
 	"dependencies": {
+		"@lucide/svelte": "^1.61.0",
 		"@tsparticles/confetti": "^4.4.0",
 		"runed": "^0.38.0",
 		"tsparticles": "^4.4.0",

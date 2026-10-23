@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
+	import type { Component } from 'svelte';
 
-	let p: { apply: () => boolean; cooldown: number; icon: string } = $props();
+	let p: { apply: () => boolean; cooldown: number; icon: Component } = $props();
 
 	let cooldownLeft = $state(0);
 	let timeout = $state<ReturnType<typeof setInterval>>();
@@ -31,8 +32,5 @@
 			{cooldownLeft}
 		</div>
 	{/if}
-	<div
-		class="size-8 bg-text"
-		style="mask-image: url({`"${p.icon}"`}); mask-size: contain; mask-repeat: no-repeat;"
-	></div>
+	<p.icon class="size-8 text-text" />
 </button>

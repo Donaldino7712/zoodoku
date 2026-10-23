@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { audio, theme, vibrate } from '#lib/config.svelte.ts';
+	import { audio, barebones, theme, vibrate } from '#lib/config.svelte.ts';
 	import { Cog } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
@@ -32,19 +32,29 @@
 			</button>
 
 			<div class="flex flex-col gap-2">
+				{#if !barebones.current}
+					<button
+						class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+						onclick={() => toggle(audio)}
+						aria-pressed={audio.current}
+					>
+						<span>Audio</span><span class="font-semibold">{audio.current ? 'On' : 'Off'}</span>
+					</button>
+					<button
+						class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+						onclick={() => toggle(vibrate)}
+						aria-pressed={vibrate.current}
+					>
+						<span>Vibrate</span><span class="font-semibold">{vibrate.current ? 'On' : 'Off'}</span>
+					</button>
+				{/if}
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-					onclick={() => toggle(audio)}
-					aria-pressed={audio.current}
+					onclick={() => toggle(barebones)}
+					aria-pressed={barebones.current}
 				>
-					<span>Audio</span><span class="font-semibold">{audio.current ? 'On' : 'Off'}</span>
-				</button>
-				<button
-					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-					onclick={() => toggle(vibrate)}
-					aria-pressed={vibrate.current}
-				>
-					<span>Vibrate</span><span class="font-semibold">{vibrate.current ? 'On' : 'Off'}</span>
+					<span>Performance</span>
+					<span class="font-semibold">{barebones.current ? 'On' : 'Off'}</span>
 				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"

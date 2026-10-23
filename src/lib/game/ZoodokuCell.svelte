@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { confetti } from '@tsparticles/confetti';
 	import { draw, scale } from 'svelte/transition';
 	import type { Board, Cell } from './index.svelte';
 	import { backOut } from 'svelte/easing';
 	import { playSound } from '#lib/audio.ts';
-	import { vibrate } from '#lib/config.svelte.ts';
+import { barebones, vibrate } from '#lib/config.svelte.ts';
+import { launchConfetti } from '#lib/effects.ts';
 
 	export type DragAction = 'cross' | 'uncross';
 	export type DragState = { action: DragAction } | undefined;
@@ -64,7 +64,7 @@
 		}
 		if (cell.animal && el) {
 			const rect = el.getBoundingClientRect();
-			confetti({
+				void launchConfetti({
 				particleCount: 12,
 				startVelocity: 10,
 				ticks: 100,
@@ -94,7 +94,7 @@
 		if (!targetCell || targetCell.userstate === 'animal' || targetCell.userstate === 'misflagged')
 			return;
 		if ((targetCell.userstate === 'crossed') === (action === 'cross')) return;
-		if (vibrate.current) navigator.vibrate?.(1);
+		if (!barebones.current && vibrate.current) navigator.vibrate?.(1);
 		if (action === 'cross') playSound('scribble');
 		targetCell.userstate = action === 'cross' ? 'crossed' : undefined;
 	}

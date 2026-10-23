@@ -1,4 +1,4 @@
-import { audio } from './config.svelte';
+import { audio, barebones } from './config.svelte';
 
 type SoundName = 'scribble' | 'found' | 'lose' | 'win';
 
@@ -65,7 +65,7 @@ function scribble(context: AudioContext, start: number): void {
 }
 
 export function playSound(sound: SoundName): void {
-	if (!audio.current) return;
+	if (!audio.current || barebones.current) return;
 	const context = getAudioContext();
 	if (!context) return;
 	const start = context.currentTime;

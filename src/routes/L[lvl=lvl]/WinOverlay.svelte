@@ -2,7 +2,8 @@
 	import { playSound } from '#lib/audio.ts';
 	import { level } from '#lib/config.svelte.ts';
 	import { goto } from '$app/navigation';
-	import { confetti } from '@tsparticles/confetti';
+	import { barebones } from '#lib/config.svelte.ts';
+	import { launchConfetti } from '#lib/effects.ts';
 	import { untrack } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
 
@@ -47,7 +48,8 @@
 		if (!p.visible) return;
 		setTimeout(() => playSound('win'), 500);
 		randomEncouragement = encouragement[Math.floor(Math.random() * encouragement.length)];
-		confetti({
+		if (!barebones.current)
+			void launchConfetti({
 			particleCount: 100,
 			spread: 70,
 			scalar: 2,

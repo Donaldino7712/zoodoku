@@ -1,0 +1,7 @@
+import { PersistedState } from 'runed';
+
+export const vibrate = new PersistedState('zoodoku-vibrate', true);
+export const audio = new PersistedState('zoodoku-audio', true);
+export const theme = new PersistedState<'dark' | 'light'>('zoodoku-theme', 'light');
+export const seed = new PersistedState('zoodoku-seed', Math.floor(Math.random() * 100000000));
+export const level = new PersistedState('zoodoku-level', 1);

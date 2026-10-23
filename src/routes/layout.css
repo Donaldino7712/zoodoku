@@ -8,10 +8,22 @@
 	--color-depress: #dcbfb1;
 	--color-error: #f9475a;
 }
-
 :root {
 	font-size: 16px;
 	@apply bg-bg text-text;
+	--cell-sat: 46%;
+	--cell-lum: 67%;
+}
+.dark {
+	color-scheme: dark;
+	--color-bg: #211d1c;
+	--color-text: #f3dfc4;
+	--color-white: #302a28;
+	--color-layer: #332d2a;
+	--color-depress: #5b4c45;
+	--color-error: #ff6675;
+	--cell-sat: 46%;
+	--cell-lum: 55%;
 }
 
 @utility clicky {

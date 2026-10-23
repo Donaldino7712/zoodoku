@@ -16,7 +16,7 @@ export class Board {
 		board.seed = seed;
 
 		// eep generating until the board has exactly one solution
-		for (let attempt = 0; attempt < 10_000; attempt += 1) {
+		for (let attempt = 0; attempt < 100_000; attempt += 1) {
 			const cells = Array.from({ length: size }, () =>
 				Array.from({ length: size }, () => ({ group: -1, animal: false }))
 			);

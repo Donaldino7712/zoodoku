@@ -101,7 +101,7 @@
 </script>
 
 <button
-	style="background-color: hsl({hue} 46% 67%);"
+	style="background-color: hsl({hue} var(--cell-sat) var(--cell-lum));"
 	ontouchstart={handleTouchStart}
 	class={[
 		'flex aspect-square size-full min-h-4 min-w-4 items-center',

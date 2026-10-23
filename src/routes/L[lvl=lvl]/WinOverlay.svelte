@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { playSound } from '#lib/audio.ts';
+	import { level } from '#lib/config.svelte.ts';
 	import { goto } from '$app/navigation';
 	import { confetti } from '@tsparticles/confetti';
+	import { untrack } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
-	import { playSound } from '#lib/audio.ts';
 
 	let p: { next: number; visible: boolean } = $props();
 
@@ -50,6 +52,10 @@
 			scalar: 2,
 			origin: { y: 0.8 }
 		});
+		level.current = Math.max(
+			untrack(() => level.current),
+			p.next
+		);
 	});
 </script>
 

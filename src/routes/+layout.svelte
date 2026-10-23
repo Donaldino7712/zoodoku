@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import type { LayoutProps } from './$types';
+	import { theme } from '#lib/config.svelte.ts';
 
 	let { children }: LayoutProps = $props();
 
@@ -21,6 +22,10 @@
 		const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
 		return (r & b & g) < 255;
 	}
+
+	$effect(() => {
+		document.documentElement.classList.toggle('dark', theme.current === 'dark');
+	});
 </script>
 
 <svelte:head>

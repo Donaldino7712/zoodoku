@@ -12,15 +12,18 @@
 	import crossrandom from '#lib/powerups/crossrandom.svg';
 	import WinOverlay from './WinOverlay.svelte';
 	import { playSound } from '#lib/audio.ts';
+	import { seed } from '#lib/config.svelte.ts';
+	import ConfigOverlay from './ConfigOverlay.svelte';
+	import { goto } from '$app/navigation';
 
 	let { params }: PageProps = $props();
 
 	const boardSize = $derived.by(() => {
-		if (params.lvl <= 6) return Math.max(params.lvl + 2, 4);
+		if (params.lvl <= 5) return params.lvl + 3;
 		const sizes = [8, 8, 8, 8, 7, 8, 6, 8, 5];
 		return sizes[(params.lvl - 6) % sizes.length];
 	});
-	let board = $derived(Board.generateGame(boardSize, 1610612741 * params.lvl));
+	let board = $derived(Board.generateGame(boardSize, seed.current * params.lvl));
 
 	let lives = $derived((params.lvl, 3));
 
@@ -38,10 +41,32 @@
 />
 
 <main class="mx-auto grid max-h-dvh min-h-dvh max-w-2xl grid-rows-[auto_auto_1fr]">
-	<div class="p-8">
-		<h2 class="text-center font-bold">Level {params.lvl}</h2>
-		<Lives {lives} max={3} />
-		<Counter found={board.found} max={boardSize} animal={getAnimal(params.lvl)} />
+	<div class="grid grid-cols-[auto_1fr_auto] p-8">
+		<div class="flex items-start">
+			<button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => history.back()}>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-chevron-left preview-icon"><path d="m15 18-6-6 6-6" /></svg
+				>
+				<span class="sr-only">Back</span>
+			</button>
+		</div>
+		<div>
+			<h2 class="text-center font-bold">Level {params.lvl}</h2>
+			<Lives {lives} max={3} />
+			<Counter found={board.found} max={boardSize} animal={getAnimal(params.lvl)} />
+		</div>
+		<div class="flex items-start">
+			<ConfigOverlay />
+		</div>
 	</div>
 
 	{#if board}

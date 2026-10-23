@@ -2,6 +2,7 @@
 	import type { Board } from './index.svelte';
 	import ZoodokuCell from './ZoodokuCell.svelte';
 	import { playSound } from '#lib/audio.ts';
+	import { vibrate } from '#lib/config.svelte.ts';
 
 	let p: { board: Board; onerror?: () => void; animal: string } = $props();
 
@@ -28,7 +29,7 @@
 		const cell = p.board.cells[row]?.[column];
 		if (!cell || cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
 		if ((cell.userstate === 'crossed') === (action === 'cross')) return;
-		navigator.vibrate?.(1);
+		if (vibrate.current) navigator.vibrate?.(1);
 		if (action === 'cross') playSound('scribble');
 		cell.userstate = action === 'cross' ? 'crossed' : undefined;
 	}

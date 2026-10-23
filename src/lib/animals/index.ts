@@ -13,7 +13,7 @@ import mouse from './mouse.svg';
 import egg21 from './egg_21.svg';
 import egg42 from './egg_42.svg';
 import egg67 from './egg_67.svg';
-import egg69 from './egg_69.svg';
+import egg69 from './egg_69.png';
 import egg420 from './egg_420.svg';
 import egg451 from './egg_451.svg';
 import egg666 from './egg_666.svg';

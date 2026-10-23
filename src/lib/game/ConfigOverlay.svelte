@@ -1,18 +1,13 @@
 <script lang="ts">
-	import { audio, seed, theme, vibrate } from '#lib/config.svelte.ts';
+	import { audio, theme, vibrate } from '#lib/config.svelte.ts';
 	import { fade } from 'svelte/transition';
 
-	let p: { currentLevel: number } = $props();
-
+	let { shareText }: { shareText?: string } = $props();
 	let visible = $state(false);
 
 	function toggle(setting: { current: boolean }): void {
 		setting.current = !setting.current;
 	}
-
-	let sharetext = $derived(
-		`Try solving my level ${p.currentLevel} of Zoodoku! https://${window.location.hostname}/L${p.currentLevel}?s=${seed.current}`
-	);
 </script>
 
 <button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => (visible = true)}>
@@ -49,18 +44,7 @@
 				onclick={() => (visible = false)}
 				aria-label="Close settings"
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="lucide lucide-x preview-icon"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg
-				>
+				<span aria-hidden="true">×</span>
 				<span class="sr-only">Close</span>
 			</button>
 
@@ -70,38 +54,34 @@
 					onclick={() => toggle(audio)}
 					aria-pressed={audio.current}
 				>
-					<span>Audio</span>
-					<span class="font-semibold">{audio.current ? 'On' : 'Off'}</span>
+					<span>Audio</span><span class="font-semibold">{audio.current ? 'On' : 'Off'}</span>
 				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
 					onclick={() => toggle(vibrate)}
 					aria-pressed={vibrate.current}
 				>
-					<span>Vibrate</span>
-					<span class="font-semibold">{vibrate.current ? 'On' : 'Off'}</span>
+					<span>Vibrate</span><span class="font-semibold">{vibrate.current ? 'On' : 'Off'}</span>
 				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
 					onclick={() => {
-						const next = {
-							light: 'dark',
-							dark: 'dark-ctp',
-							'dark-ctp': 'light'
-						} as const;
+						const next = { light: 'dark', dark: 'dark-ctp', 'dark-ctp': 'light' } as const;
 						theme.current = next[theme.current];
 					}}
 				>
 					<span>Theme</span>
-					<span class="font-semibold">
-						{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[theme.current]}
-					</span>
+					<span class="font-semibold"
+						>{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[
+							theme.current
+						]}</span
+					>
 				</button>
 
-				{#if navigator.canShare?.({ text: sharetext })}
+				{#if shareText && navigator.canShare?.({ text: shareText })}
 					<button
 						class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => navigator.share({ text: sharetext })}
+						onclick={() => navigator.share({ text: shareText })}
 					>
 						Share this level
 					</button>

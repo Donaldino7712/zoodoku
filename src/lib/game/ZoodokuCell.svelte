@@ -3,6 +3,7 @@
 	import { draw, scale } from 'svelte/transition';
 	import type { Cell } from './index.svelte';
 	import { backOut } from 'svelte/easing';
+	import { playSound } from '#lib/audio.ts';
 
 	let {
 		cell,
@@ -36,12 +37,16 @@
 	let el = $state<HTMLButtonElement>();
 	function toggleCell(): void {
 		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
+		if (cell.userstate !== 'crossed') playSound('scribble');
 		cell.userstate = cell.userstate === 'crossed' ? undefined : 'crossed';
 	}
 
 	function markCell(): void {
 		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
 		cell.userstate = cell.animal ? 'animal' : 'misflagged';
+		if (cell.animal) {
+			playSound('found');
+		}
 		if (cell.animal && el) {
 			const rect = el.getBoundingClientRect();
 			confetti({

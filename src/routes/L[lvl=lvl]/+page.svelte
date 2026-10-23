@@ -11,6 +11,7 @@
 	import search from '#lib/powerups/search.svg';
 	import crossrandom from '#lib/powerups/crossrandom.svg';
 	import WinOverlay from './WinOverlay.svelte';
+	import { playSound } from '#lib/audio.ts';
 
 	let { params }: PageProps = $props();
 
@@ -22,6 +23,12 @@
 	let board = $derived(Board.generateGame(boardSize, 1610612741 * params.lvl));
 
 	let lives = $derived((params.lvl, 3));
+
+	function discoverAnimal(): boolean {
+		const discovered = board?.discoverRandomAnimal() ?? false;
+		if (discovered) playSound('found');
+		return discovered;
+	}
 </script>
 
 <WinOverlay visible={board.won} next={params.lvl + 1} />
@@ -39,7 +46,11 @@
 
 	{#if board}
 		<div class="px-4">
-			<Zoodoku {board} onerror={() => lives--} animal={getAnimal(params.lvl)} />
+			<Zoodoku
+				{board}
+				onerror={() => (playSound('lose'), lives--)}
+				animal={getAnimal(params.lvl)}
+			/>
 		</div>
 	{:else}
 		<div class="p-4">Loading...</div>
@@ -47,7 +58,7 @@
 
 	<div class="flex items-center justify-center gap-4">
 		<PowerUp apply={() => board?.applyRulesAsChecks()} cooldown={10} icon={checks} />
-		<PowerUp apply={() => board?.discoverRandomAnimal()} cooldown={30} icon={search} />
+		<PowerUp apply={discoverAnimal} cooldown={30} icon={search} />
 		<PowerUp apply={() => board?.crossRandomCells(5)} cooldown={30} icon={crossrandom} />
 	</div>
 	<div class="flex">

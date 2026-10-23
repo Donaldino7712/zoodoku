@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { confetti } from '@tsparticles/confetti';
-	import { onMount } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
+	import { playSound } from '#lib/audio.ts';
 
 	let p: { next: number; visible: boolean } = $props();
 
@@ -42,6 +42,7 @@
 
 	$effect(() => {
 		if (!p.visible) return;
+		setTimeout(() => playSound('win'), 500);
 		randomEncouragement = encouragement[Math.floor(Math.random() * encouragement.length)];
 		confetti({
 			particleCount: 100,

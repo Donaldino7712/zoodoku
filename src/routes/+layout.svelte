@@ -2,7 +2,7 @@
 	import './layout.css';
 	import type { LayoutProps } from './$types';
 	import { page } from '$app/state';
-import { barebones, theme } from '#lib/config.svelte.ts';
+import { animations, barebones, theme } from '#lib/config.svelte.ts';
 
 	let { children }: LayoutProps = $props();
 
@@ -28,6 +28,7 @@ import { barebones, theme } from '#lib/config.svelte.ts';
 		document.documentElement.classList.toggle('dark', theme.current === 'dark');
 		document.documentElement.classList.toggle('dark-ctp', theme.current === 'dark-ctp');
 		document.documentElement.classList.toggle('barebones', barebones.current);
+		document.documentElement.classList.toggle('no-animations', !animations.current);
 
 		const backgroundColor = getComputedStyle(document.documentElement)
 			.getPropertyValue('--color-bg')

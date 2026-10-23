@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import { Heart } from '@lucide/svelte';
-	import { barebones } from '#lib/config.svelte.ts';
+	import { animations } from '#lib/config.svelte.ts';
 
 	let { lives, max }: { lives: number; max: number } = $props();
 </script>
@@ -13,7 +13,7 @@
 			{#if i < lives}
 				<div
 					class="absolute inset-0 size-8"
-					out:scale={{ duration: barebones.current ? 0 : 300, opacity: 1 }}
+					out:scale={{ duration: animations.current ? 300 : 0, opacity: 1 }}
 				>
 					<Heart class="size-8 text-error" fill="currentColor" />
 				</div>

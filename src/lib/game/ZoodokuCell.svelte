@@ -3,8 +3,8 @@
 	import type { Board, Cell } from './index.svelte';
 	import { backOut } from 'svelte/easing';
 	import { playSound } from '#lib/audio.ts';
-import { barebones, vibrate } from '#lib/config.svelte.ts';
-import { launchConfetti } from '#lib/effects.ts';
+	import { animations, barebones, vibrate } from '#lib/config.svelte.ts';
+	import { launchConfetti } from '#lib/effects.ts';
 
 	export type DragAction = 'cross' | 'uncross';
 	export type DragState = { action: DragAction } | undefined;
@@ -64,7 +64,7 @@ import { launchConfetti } from '#lib/effects.ts';
 		}
 		if (cell.animal && el) {
 			const rect = el.getBoundingClientRect();
-				void launchConfetti({
+			void launchConfetti({
 				particleCount: 12,
 				startVelocity: 10,
 				ticks: 100,
@@ -216,8 +216,8 @@ import { launchConfetti } from '#lib/effects.ts';
 			src={animal}
 			alt="Successfully found!"
 			class="animal-art pointer-events-none absolute size-3/4"
-			in:scale={{ duration: barebones.current ? 0 : 300, easing: backOut }}
-			out:scale={{ duration: barebones.current ? 0 : 300 }}
+			in:scale={{ duration: animations.current ? 300 : 0, easing: backOut }}
+			out:scale={{ duration: animations.current ? 300 : 0 }}
 		/>
 	{/if}
 	{@render cross(cell.userstate === 'misflagged', 'text-error')}
@@ -237,13 +237,10 @@ import { launchConfetti } from '#lib/effects.ts';
 			stroke-width="4"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-					out:scale={{ duration: barebones.current ? 0 : 300 }}
+			out:scale={{ duration: animations.current ? 300 : 0 }}
 		>
-			<path d="M18 6 6 18" in:draw={{ duration: barebones.current ? 0 : 200 }} />
-			<path
-				d="m6 6 12 12"
-				in:draw={{ delay: barebones.current ? 0 : 100, duration: barebones.current ? 0 : 200 }}
-			/>
+			<path d="M18 6 6 18" in:draw={{ duration: animations.current ? 200 : 0 }} />
+			<path d="m6 6 12 12" in:draw={{ delay: 100, duration: animations.current ? 200 : 0 }} />
 		</svg>
 	{/if}
 {/snippet}

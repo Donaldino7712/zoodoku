@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade, scale } from 'svelte/transition';
-	import { barebones } from '#lib/config.svelte.ts';
+	import { animations } from '#lib/config.svelte.ts';
 
 	let p: { retry: () => void; visible: boolean } = $props();
 
@@ -42,11 +42,11 @@
 {#if p.visible}
 	<div
 		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-		in:fade={{ duration: barebones.current ? 0 : 400 }}
+		in:fade={{ duration: animations.current ? 400 : 0 }}
 	>
 		<div
 			class="min-w-2xs rounded-3xl bg-bg p-4"
-			in:scale={{ duration: barebones.current ? 0 : 300 }}
+			in:scale={{ duration: animations.current ? 300 : 0 }}
 		>
 			<h3 class="mt-1 text-center text-2xl font-bold text-error">{randomEncouragement}</h3>
 			<button

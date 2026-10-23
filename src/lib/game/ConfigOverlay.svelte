@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { audio, barebones, theme, vibrate } from '#lib/config.svelte.ts';
+	import { animations, audio, barebones, theme, vibrate } from '#lib/config.svelte.ts';
 	import { Cog } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
@@ -19,7 +19,7 @@
 {#if visible}
 	<div
 		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-		transition:fade={{ duration: barebones.current ? 0 : 200 }}
+		transition:fade={{ duration: animations.current ? 200 : 0 }}
 	>
 		<div class="flex min-w-2xs flex-col gap-3 rounded-3xl bg-bg p-4">
 			<button
@@ -50,12 +50,22 @@
 				{/if}
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-					onclick={() => toggle(barebones)}
+					onclick={() => (toggle(barebones), (animations.current = true))}
 					aria-pressed={barebones.current}
 				>
 					<span>Performance</span>
 					<span class="font-semibold">{barebones.current ? 'On' : 'Off'}</span>
 				</button>
+				{#if barebones.current}
+					<button
+						class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+						onclick={() => toggle(animations)}
+						aria-pressed={animations.current}
+					>
+						<span>Keep Animations</span>
+						<span class="font-semibold">{animations.current ? 'On' : 'Off'}</span>
+					</button>
+				{/if}
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
 					onclick={() => {

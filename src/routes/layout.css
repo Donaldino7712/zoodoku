@@ -42,25 +42,23 @@
 }
 
 .animal-art {
-	filter:
-		drop-shadow(1px 0 0 #fff)
-		drop-shadow(-1px 0 0 #fff)
-		drop-shadow(0 1px 0 #fff)
-		drop-shadow(0 -1px 0 #fff)
-		drop-shadow(1px 1px 0 #fff)
-		drop-shadow(-1px 1px 0 #fff)
-		drop-shadow(1px -1px 0 #fff)
-		drop-shadow(-1px -1px 0 #fff);
+	filter: drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff)
+		drop-shadow(0 -1px 0 #fff) drop-shadow(1px 1px 0 #fff) drop-shadow(-1px 1px 0 #fff)
+		drop-shadow(1px -1px 0 #fff) drop-shadow(-1px -1px 0 #fff);
 }
 
 .barebones *,
 .barebones *::before,
 .barebones *::after {
-	animation-duration: 0s !important;
-	animation-delay: 0s !important;
 	backdrop-filter: none !important;
 	box-shadow: none !important;
 	filter: none !important;
+}
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+	animation-duration: 0s !important;
+	animation-delay: 0s !important;
 	transition-duration: 0s !important;
 	transition-delay: 0s !important;
 }

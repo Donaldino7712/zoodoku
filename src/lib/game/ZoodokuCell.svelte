@@ -37,6 +37,12 @@
 		cell.userstate = cell.userstate === 'crossed' ? undefined : 'crossed';
 	}
 
+	function markCell(): void {
+		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
+		cell.userstate = cell.animal ? 'animal' : 'misflagged';
+		if (!cell.animal) onerror?.();
+	}
+
 	function handleTouchStart(event: TouchEvent): void {
 		const now = Date.now();
 		const isDoubleTap = now - lastTouchAt < 300;
@@ -49,10 +55,7 @@
 		suppressTouchClickTimeout = setTimeout(() => (suppressTouchClick = false), 500);
 		onTouchStart(event);
 
-		if (isDoubleTap && cell.userstate !== 'animal' && cell.userstate !== 'misflagged') {
-			cell.userstate = cell.animal ? 'animal' : 'misflagged';
-			if (!cell.animal) onerror?.();
-		}
+		if (isDoubleTap) markCell();
 	}
 
 	function handleClick(): void {
@@ -66,9 +69,7 @@
 		if (now - lastClickAt < 300) {
 			clearTimeout(clickTimeout);
 			lastClickAt = 0;
-			if (cell.userstate !== 'animal' && cell.userstate !== 'misflagged') {
-				cell.userstate = cell.animal ? 'animal' : 'misflagged';
-			}
+			markCell();
 			return;
 		}
 

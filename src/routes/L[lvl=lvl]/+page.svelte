@@ -17,18 +17,24 @@
 	let lives = $derived((params.lvl, 3));
 </script>
 
-<h2 class="pt-8 text-center font-bold">Level {params.lvl}</h2>
-<Lives {lives} max={3} />
-
-{#if board}
-	<div class="p-4">
-		<Zoodoku {board} onerror={() => lives--} animal={getAnimal(params.lvl)} />
+<main class="mx-auto grid max-h-dvh min-h-dvh max-w-2xl grid-rows-[auto_auto_1fr]">
+	<div class="p-8">
+		<h2 class="text-center font-bold">Level {params.lvl}</h2>
+		<Lives {lives} max={3} />
 	</div>
 
-	<button class="bg-amber-200 p-4" onclick={() => board?.applyRulesAsChecks()}>apply rules</button>
+	{#if board}
+		<div class="px-4">
+			<Zoodoku {board} onerror={() => lives--} animal={getAnimal(params.lvl)} />
+		</div>
+	{:else}
+		<div class="p-4">Loading...</div>
+	{/if}
 
-	<a href="/L{params.lvl - 1}" class="bg-amber-200 p-4">prev</a>
-	<a href="/L{params.lvl + 1}" class="bg-amber-200 p-4">next</a>
-{:else}
-	<div class="p-4">Loading...</div>
-{/if}
+	<div class="flex items-center justify-center gap-2">
+		<button class="bg-layer p-4" onclick={() => board?.applyRulesAsChecks()}> apply rules </button>
+
+		<a href="/L{params.lvl - 1}" class="bg-layer p-4">prev</a>
+		<a href="/L{params.lvl + 1}" class="bg-layer p-4">next</a>
+	</div>
+</main>

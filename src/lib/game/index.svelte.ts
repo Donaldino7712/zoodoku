@@ -54,6 +54,31 @@ export class Board {
 		throw new Error('unable to generate an easily solvable Zoodoku board');
 	}
 
+	get statehash() {
+		let mask = 0n;
+		let bit = 1n;
+		for (const row of this.cells)
+			for (const cell of row) {
+				if (cell.userstate !== undefined) mask |= bit;
+				bit <<= 1n;
+			}
+		return mask === 0n ? '' : mask.toString(16);
+	}
+	set statehash(hash: string) {
+		if (hash.length === 0) return;
+		if (!/^[0-9a-f]+$/i.test(hash)) throw new Error('invalid statehash');
+
+		const mask = BigInt(`0x${hash}`);
+		if (mask >> BigInt(this.size * this.size) !== 0n) throw new Error('invalid statehash');
+
+		let i = 0;
+		for (const row of this.cells)
+			for (const cell of row) {
+				if ((mask >> BigInt(i)) & 1n) cell.userstate = cell.animal ? 'animal' : 'crossed';
+				i += 1;
+			}
+	}
+
 	get found() {
 		return this.cells.flat().filter((cell) => cell.userstate === 'animal').length;
 	}

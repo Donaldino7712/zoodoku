@@ -7,13 +7,15 @@
 	import WinOverlay from './WinOverlay.svelte';
 	import { page } from '$app/state';
 	import { playSound } from '#lib/audio.ts';
-	import { seed } from '#lib/config.svelte.ts';
+	import { animations, seed } from '#lib/config.svelte.ts';
+	import { fade, scale } from 'svelte/transition';
 
 	const typicalGenerationAttempts = 5_000;
 
 	let { params }: PageProps = $props();
 
 	let usedseed = $state(parseInt(page.url.searchParams.get('s')!) || seed.current);
+	let providedstatehash = $state(page.url.searchParams.get('h'));
 
 	const boardSize = $derived.by(() => {
 		if (params.lvl <= 5) return params.lvl + 3;
@@ -71,6 +73,33 @@
 </script>
 
 {#if generation.status === 'ready'}
+	{#if providedstatehash}
+		<div
+			class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+			transition:fade={{ duration: animations.current ? 400 : 0 }}
+		>
+			<div class="mx-4 min-w-2xs rounded-3xl bg-bg p-4">
+				<p class="font-bold">
+					The shared link has had parts of the level prefilled. Would you like to continue or start
+					fresh?
+				</p>
+				<button
+					class="mt-2 w-full p-2 text-center underline"
+					onclick={() => {
+						if (generation.status !== 'ready' || !providedstatehash) return;
+						generation.board.statehash = providedstatehash;
+						providedstatehash = null;
+					}}
+				>
+					Continue
+				</button>
+				<button class="w-full p-2 text-center underline" onclick={() => (providedstatehash = null)}>
+					Start fresh
+				</button>
+			</div>
+		</div>
+	{/if}
+
 	<WinOverlay
 		visible={generation.board.won}
 		next={params.lvl + 1}
@@ -86,7 +115,7 @@
 		title={`Level ${params.lvl}`}
 		animal={getAnimal(params.lvl)}
 		onerror={() => (playSound('lose'), lives--)}
-		shareText={`Try solving my level ${params.lvl} of Zoodoku! https://${window.location.hostname}/L${params.lvl}?s=${seed.current}`}
+		shareText={`Try solving my level ${params.lvl} of Zoodoku! https://${window.location.hostname}/L${params.lvl}?s=${seed.current}&h=${generation.board.statehash}`}
 	/>
 {:else if generation.status === 'loading'}
 	<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">

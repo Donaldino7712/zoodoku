@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { draw, scale } from 'svelte/transition';
 	import type { Cell } from './index.svelte';
-	import cat from '#lib/assets/cat.svg';
+	import { backOut } from 'svelte/easing';
 
 	let {
 		cell,
@@ -11,7 +11,8 @@
 		topRight = false,
 		bottomLeft = false,
 		bottomRight = false,
-		onerror
+		onerror,
+		animal
 	}: {
 		cell: Cell;
 		onTouchStart: (event: TouchEvent) => void;
@@ -21,6 +22,7 @@
 		bottomLeft?: boolean;
 		bottomRight?: boolean;
 		onerror?: () => void;
+		animal: string;
 	} = $props();
 
 	let suppressTouchClick = false;
@@ -81,18 +83,24 @@
 	style="background-color: hsl({hue} 46% 67%);"
 	ontouchstart={handleTouchStart}
 	class={[
-		'flex aspect-square size-full min-h-8 min-w-8 items-center',
+		'flex aspect-square size-full min-h-4 min-w-4 items-center',
 		'relative clicky justify-center rounded-lg',
-		(['misflagged', 'animal'] as (typeof cell.userstate)[]).includes(cell.userstate) && 'disabled',
 		topLeft && 'rounded-tl-xl',
 		topRight && 'rounded-tr-xl',
 		bottomLeft && 'rounded-bl-xl',
 		bottomRight && 'rounded-br-xl'
 	]}
+	disabled={cell.userstate === 'animal' || cell.userstate === 'misflagged'}
 	onclick={handleClick}
 >
 	{#if cell.userstate === 'animal'}
-		<img src={cat} alt="Successfully found!" class="size-1/2" />
+		<img
+			src={animal}
+			alt="Successfully found!"
+			class="pointer-events-none absolute size-3/4"
+			in:scale={{ duration: 300, easing: backOut }}
+			out:scale={{ duration: 300 }}
+		/>
 	{/if}
 	{@render cross(cell.userstate === 'misflagged', 'text-error')}
 	{@render cross(cell.userstate === 'crossed', 'text-white')}

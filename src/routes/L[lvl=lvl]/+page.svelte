@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getAnimal } from '#lib/animals/index.ts';
 	import { Board } from '#lib/game/index.svelte.ts';
 	import Zoodoku from '#lib/game/Zoodoku.svelte';
 	import type { PageProps } from './$types';
@@ -21,7 +22,7 @@
 
 {#if board}
 	<div class="p-4">
-		<Zoodoku {board} onerror={() => lives--} />
+		<Zoodoku {board} onerror={() => lives--} animal={getAnimal(params.lvl)} />
 	</div>
 
 	<button class="bg-amber-200 p-4" onclick={() => board?.applyRulesAsChecks()}>apply rules</button>

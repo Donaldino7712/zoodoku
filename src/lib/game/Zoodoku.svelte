@@ -2,12 +2,11 @@
 	import type { Board } from './index.svelte';
 	import ZoodokuCell from './ZoodokuCell.svelte';
 
-	let p: { board: Board; onerror?: () => void } = $props();
+	let p: { board: Board; onerror?: () => void; animal: string } = $props();
 
 	type SwipeAction = 'cross' | 'uncross';
-	type Swipe = { action: SwipeAction };
 
-	let swipe: Swipe | undefined = $state();
+	let swipe = $state<{ action: SwipeAction }>();
 	let boardElement: HTMLDivElement;
 
 	function cellFromTouch(touch: Touch): { row: number; column: number } | undefined {
@@ -76,6 +75,7 @@
 					bottomLeft={i === p.board.cells.length - 1 && j === 0}
 					bottomRight={i === p.board.cells.length - 1 && j === row.length - 1}
 					onerror={p.onerror}
+					animal={p.animal}
 				/>
 			{/each}
 		</div>

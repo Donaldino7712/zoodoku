@@ -17,6 +17,8 @@
 		lives,
 		max,
 		shareText,
+		instructions,
+		highlight,
 		onerror
 	}: {
 		board: Board;
@@ -25,6 +27,8 @@
 		lives: number;
 		max: number;
 		shareText?: string;
+		instructions?: string;
+		highlight?: { row: number; column: number };
 		onerror?: () => void;
 	} = $props();
 
@@ -58,6 +62,9 @@
 			<h2 class="text-center font-bold">{title}</h2>
 			<Lives {lives} max={3} />
 			<Counter found={board.found} {max} {animal} />
+			{#if instructions}
+				<p class="mx-auto mt-3 max-w-sm text-center text-sm">{instructions}</p>
+			{/if}
 		</div>
 		<div class="flex items-start">
 			<ConfigOverlay {shareText} />
@@ -65,7 +72,7 @@
 	</div>
 
 	<div class="px-4">
-		<Zoodoku {board} {onerror} {animal} />
+		<Zoodoku {board} {onerror} {animal} {highlight} />
 	</div>
 
 	<div class="flex items-center justify-center gap-4">

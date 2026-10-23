@@ -23,6 +23,7 @@
 				</button>
 			{/each}
 		</div>
+		<button class="mt-4 w-full py-2 underline" onclick={() => goto('/tutorial')}> Tutorial </button>
 	{:else}
 		<p class="mt-4">Loading...</p>
 	{/if}

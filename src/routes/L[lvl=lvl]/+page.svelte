@@ -3,7 +3,7 @@
 	import { Board } from '#lib/game/index.svelte.ts';
 	import GameScreen from '#lib/game/GameScreen.svelte';
 	import type { PageProps } from './$types';
-	import LossOverlay from './LossOverlay.svelte';
+	import LossOverlay from '#lib/game/LossOverlay.svelte';
 	import WinOverlay from './WinOverlay.svelte';
 	import { page } from '$app/state';
 	import { playSound } from '#lib/audio.ts';

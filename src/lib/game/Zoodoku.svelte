@@ -4,7 +4,12 @@
 	import { playSound } from '#lib/audio.ts';
 	import { vibrate } from '#lib/config.svelte.ts';
 
-	let p: { board: Board; onerror?: () => void; animal: string } = $props();
+	let p: {
+		board: Board;
+		onerror?: () => void;
+		animal: string;
+		highlight?: { row: number; column: number };
+	} = $props();
 
 	type SwipeAction = 'cross' | 'uncross';
 
@@ -80,6 +85,7 @@
 					bottomRight={i === p.board.cells.length - 1 && j === row.length - 1}
 					onerror={p.onerror}
 					animal={p.animal}
+					highlight={p.highlight?.row === i && p.highlight.column === j}
 				/>
 			{/each}
 		</div>

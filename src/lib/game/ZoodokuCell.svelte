@@ -14,7 +14,8 @@
 		bottomLeft = false,
 		bottomRight = false,
 		onerror,
-		animal
+		animal,
+		highlight = false
 	}: {
 		cell: Cell;
 		onTouchStart: (event: TouchEvent) => void;
@@ -25,6 +26,7 @@
 		bottomRight?: boolean;
 		onerror?: () => void;
 		animal: string;
+		highlight?: boolean;
 	} = $props();
 
 	let suppressTouchClick = false;
@@ -106,6 +108,7 @@
 	class={[
 		'flex aspect-square size-full min-h-4 min-w-4 items-center',
 		'relative clicky justify-center rounded-lg',
+		highlight && 'z-10 ring-4 ring-error ring-offset-2',
 		topLeft && 'rounded-tl-xl',
 		topRight && 'rounded-tr-xl',
 		bottomLeft && 'rounded-bl-xl',

@@ -31,7 +31,6 @@
 			.getPropertyValue('--color-bg')
 			.trim();
 		document.querySelector('meta[name="theme-color"]')?.setAttribute('content', backgroundColor);
-		document.documentElement.style.accentColor = backgroundColor;
 	});
 </script>
 

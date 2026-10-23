@@ -7,6 +7,7 @@
 	import checks from '#lib/powerups/checks.svg';
 	import search from '#lib/powerups/search.svg';
 	import crossrandom from '#lib/powerups/crossrandom.svg';
+	import { fade, scale } from 'svelte/transition';
 
 	const boardSize = 5;
 	const animalColumns = [3, 0, 2, 4, 1];
@@ -92,8 +93,11 @@
 <LossOverlay visible={lives <= 0} {retry} />
 
 {#if board.won}
-	<div class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-		<div class="max-w-sm min-w-2xs rounded-3xl bg-bg p-4">
+	<div
+		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+		in:fade={{ delay: 800 }}
+	>
+		<div in:scale={{ delay: 300 }} class="max-w-sm min-w-2xs rounded-3xl bg-bg p-4">
 			<h3 class="text-center text-2xl font-bold">Tutorial complete!</h3>
 			<p class="mt-2">
 				You're ready to play. If you're stuck, you can use these power-ups to help you:

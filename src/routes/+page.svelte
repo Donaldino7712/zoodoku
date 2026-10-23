@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 </script>
 
-<main class="mt-1/3 flex min-h-dvh flex-col items-center p-8">
+<main class="mt-1/3 mx-auto flex min-h-dvh max-w-lg flex-col items-center p-8">
 	<img src="/icons/icon.svg" alt="logo" class="size-2/3" />
 	{#if browser}
 		<button

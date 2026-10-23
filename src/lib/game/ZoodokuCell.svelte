@@ -11,7 +11,7 @@
 		topRight = false,
 		bottomLeft = false,
 		bottomRight = false,
-		seed
+		onerror
 	}: {
 		cell: Cell;
 		onTouchStart: (event: TouchEvent) => void;
@@ -20,7 +20,7 @@
 		topRight?: boolean;
 		bottomLeft?: boolean;
 		bottomRight?: boolean;
-		seed: number;
+		onerror?: () => void;
 	} = $props();
 
 	let suppressTouchClick = false;
@@ -49,6 +49,7 @@
 
 		if (isDoubleTap && cell.userstate !== 'animal' && cell.userstate !== 'misflagged') {
 			cell.userstate = cell.animal ? 'animal' : 'misflagged';
+			if (!cell.animal) onerror?.();
 		}
 	}
 

@@ -2,7 +2,7 @@
 	import type { Board } from './index.svelte';
 	import ZoodokuCell from './ZoodokuCell.svelte';
 
-	let p: { board: Board } = $props();
+	let p: { board: Board; onerror?: () => void } = $props();
 
 	type SwipeAction = 'cross' | 'uncross';
 	type Swipe = { action: SwipeAction };
@@ -75,7 +75,7 @@
 					topRight={i === 0 && j === row.length - 1}
 					bottomLeft={i === p.board.cells.length - 1 && j === 0}
 					bottomRight={i === p.board.cells.length - 1 && j === row.length - 1}
-					seed={p.board.seed}
+					onerror={p.onerror}
 				/>
 			{/each}
 		</div>

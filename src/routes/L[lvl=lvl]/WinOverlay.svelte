@@ -6,7 +6,7 @@
 	import { untrack } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
 
-	let p: { next: number; visible: boolean } = $props();
+	let p: { next: number; visible: boolean; customseed: boolean; retry: () => void } = $props();
 
 	const encouragement = [
 		'Awesome',
@@ -52,10 +52,11 @@
 			scalar: 2,
 			origin: { y: 0.8 }
 		});
-		level.current = Math.max(
-			untrack(() => level.current),
-			p.next
-		);
+		if (!p.customseed)
+			level.current = Math.max(
+				untrack(() => level.current),
+				p.next
+			);
 	});
 </script>
 
@@ -66,11 +67,23 @@
 	>
 		<div class="min-w-2xs rounded-3xl bg-bg p-4" in:scale={{ delay: 300 }}>
 			<h3 class="mt-1 text-center text-2xl font-bold">{randomEncouragement}!</h3>
-			<button
-				class="mt-4 w-full clicky rounded-lg border border-depress bg-layer p-4 drop-shadow"
-				onclick={() => goto(`/L${p.next}`, { replace: true })}
-			>
-				Level {p.next}
+			{#if !p.customseed}
+				<button
+					class="mt-4 w-full clicky rounded-lg border border-depress bg-layer p-4 drop-shadow"
+					onclick={() => goto(`/L${p.next}`, { replace: true })}
+				>
+					Level {p.next}
+				</button>
+			{:else}
+				<button
+					class="mt-4 w-full clicky rounded-lg border border-depress bg-layer p-4 drop-shadow"
+					onclick={() => goto(`/`)}
+				>
+					Play Zoodoku
+				</button>
+			{/if}
+			<button class="mt-4 w-full text-center underline" onclick={() => p.retry()}>
+				Play again
 			</button>
 		</div>
 	</div>

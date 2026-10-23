@@ -1,12 +1,18 @@
 <script lang="ts">
-	import { audio, theme, vibrate } from '#lib/config.svelte.ts';
+	import { audio, seed, theme, vibrate } from '#lib/config.svelte.ts';
 	import { fade } from 'svelte/transition';
+
+	let p: { currentLevel: number } = $props();
 
 	let visible = $state(false);
 
 	function toggle(setting: { current: boolean }): void {
 		setting.current = !setting.current;
 	}
+
+	let sharetext = $derived(
+		`Try solving my level ${p.currentLevel} of Zoodoku! https://${window.location.hostname}/L${p.currentLevel}?s=${seed.current}`
+	);
 </script>
 
 <button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => (visible = true)}>
@@ -82,6 +88,15 @@
 					<span>Theme</span>
 					<span class="font-semibold">{theme.current === 'dark' ? 'Dark' : 'Light'}</span>
 				</button>
+
+				{#if navigator.canShare?.({ text: sharetext })}
+					<button
+						class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+						onclick={() => navigator.share({ text: sharetext })}
+					>
+						Share this level
+					</button>
+				{/if}
 			</div>
 		</div>
 	</div>

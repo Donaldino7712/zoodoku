@@ -14,16 +14,18 @@
 	import { playSound } from '#lib/audio.ts';
 	import { seed } from '#lib/config.svelte.ts';
 	import ConfigOverlay from './ConfigOverlay.svelte';
-	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 
 	let { params }: PageProps = $props();
+
+	let usedseed = $state(parseInt(page.url.searchParams.get('s')!) || seed.current);
 
 	const boardSize = $derived.by(() => {
 		if (params.lvl <= 5) return params.lvl + 3;
 		const sizes = [8, 8, 8, 8, 7, 8, 6, 8, 5];
 		return sizes[(params.lvl - 6) % sizes.length];
 	});
-	let board = $derived(Board.generateGame(boardSize, seed.current * params.lvl));
+	let board = $derived(Board.generateGame(boardSize, usedseed * params.lvl));
 
 	let lives = $derived((params.lvl, 3));
 
@@ -34,10 +36,15 @@
 	}
 </script>
 
-<WinOverlay visible={board.won} next={params.lvl + 1} />
+<WinOverlay
+	visible={board.won}
+	next={params.lvl + 1}
+	customseed={page.url.searchParams.has('s')}
+	retry={() => ((lives = 3), (board = Board.generateGame(boardSize, usedseed * params.lvl)))}
+/>
 <LossOverlay
 	visible={lives <= 0}
-	retry={() => ((lives = 3), (board = Board.generateGame(boardSize, 1610612741 * params.lvl)))}
+	retry={() => ((lives = 3), (board = Board.generateGame(boardSize, usedseed * params.lvl)))}
 />
 
 <main class="mx-auto grid max-h-dvh min-h-dvh max-w-2xl grid-rows-[auto_auto_1fr]">
@@ -65,7 +72,7 @@
 			<Counter found={board.found} max={boardSize} animal={getAnimal(params.lvl)} />
 		</div>
 		<div class="flex items-start">
-			<ConfigOverlay />
+			<ConfigOverlay currentLevel={params.lvl} />
 		</div>
 	</div>
 

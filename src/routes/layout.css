@@ -22,8 +22,8 @@
 	--color-layer: #332d2a;
 	--color-depress: #5b4c45;
 	--color-error: #ff6675;
-	--cell-sat: 46%;
-	--cell-lum: 55%;
+	--cell-sat: 55%;
+	--cell-lum: 50%;
 }
 
 @utility clicky {

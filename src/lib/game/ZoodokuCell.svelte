@@ -240,7 +240,10 @@
 			out:scale={{ duration: animations.current ? 300 : 0 }}
 		>
 			<path d="M18 6 6 18" in:draw={{ duration: animations.current ? 200 : 0 }} />
-			<path d="m6 6 12 12" in:draw={{ delay: 100, duration: animations.current ? 200 : 0 }} />
+			<path
+				d="m6 6 12 12"
+				in:draw={{ delay: animations.current ? 100 : 0, duration: animations.current ? 200 : 0 }}
+			/>
 		</svg>
 	{/if}
 {/snippet}

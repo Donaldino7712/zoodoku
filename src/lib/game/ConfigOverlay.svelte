@@ -48,22 +48,20 @@
 				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-					onclick={() => (toggle(barebones), (animations.current = true))}
+					onclick={() => toggle(barebones)}
 					aria-pressed={barebones.current}
 				>
 					<span>Performance</span>
 					<span class="font-semibold">{barebones.current ? 'On' : 'Off'}</span>
 				</button>
-				{#if barebones.current}
-					<button
-						class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => toggle(animations)}
-						aria-pressed={animations.current}
-					>
-						<span>Keep Animations</span>
-						<span class="font-semibold">{animations.current ? 'On' : 'Off'}</span>
-					</button>
-				{/if}
+				<button
+					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+					onclick={() => toggle(animations)}
+					aria-pressed={animations.current}
+				>
+					<span>Animations</span>
+					<span class="font-semibold">{animations.current ? 'On' : 'Off'}</span>
+				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
 					onclick={() => {

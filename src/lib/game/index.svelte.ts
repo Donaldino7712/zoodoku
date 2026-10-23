@@ -1,11 +1,18 @@
 export class Board {
+	static readonly maxGenerationAttempts = 100_000;
+	static readonly generationYieldInterval = 16;
+
 	/** cells[y][x] */
 	cells = $state<Cell[][]>([]);
 	groupHues = $state<number[]>([]);
 	seed = 0;
 	size = $derived(this.cells.length);
 
-	static generateGame(size: number, seed: number): Board {
+	static async generateGame(
+		size: number,
+		seed: number,
+		onProgress?: (progress: GenerationProgress) => void
+	): Promise<Board> {
 		if (!Number.isInteger(size) || size < 1)
 			throw new RangeError('size must be a positive integer');
 		if (!Number.isFinite(seed)) throw new RangeError('seed must be a finite number');
@@ -15,8 +22,10 @@ export class Board {
 		const board = new Board();
 		board.seed = seed;
 
-		// eep generating until the board has exactly one solution
-		for (let attempt = 0; attempt < 100_000; attempt += 1) {
+		onProgress?.({ attempts: 0, maxAttempts: Board.maxGenerationAttempts });
+
+		// Yield periodically so the browser can render progress and respond to input.
+		for (let attempt = 0; attempt < Board.maxGenerationAttempts; attempt += 1) {
 			const cells = Array.from({ length: size }, () =>
 				Array.from({ length: size }, () => ({ group: -1, animal: false }))
 			);
@@ -29,10 +38,16 @@ export class Board {
 			}
 
 			growRegions(cells, size, random);
-			if (!hasUniqueSolution(cells)) continue;
+			if (!hasUniqueSolution(cells)) {
+				const attempts = attempt + 1;
+				onProgress?.({ attempts, maxAttempts: Board.maxGenerationAttempts });
+				if (attempts % Board.generationYieldInterval === 0) await yieldToBrowser();
+				continue;
+			}
 
 			board.groupHues = chooseGroupHues(cells, groups, random);
 			board.cells = cells;
+			onProgress?.({ attempts: attempt + 1, maxAttempts: Board.maxGenerationAttempts });
 			return board;
 		}
 
@@ -97,6 +112,15 @@ export class Board {
 		}
 		return true;
 	}
+}
+
+export interface GenerationProgress {
+	attempts: number;
+	maxAttempts: number;
+}
+
+function yieldToBrowser(): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function hasUniqueSolution(cells: Cell[][]): boolean {

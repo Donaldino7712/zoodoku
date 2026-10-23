@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
+	import { barebones } from '#lib/config.svelte.ts';
 
 	let { animal, found, max }: { animal: string; found: number; max: number } = $props();
 </script>
@@ -21,7 +22,7 @@
 					src={animal}
 					alt=""
 					class="absolute inset-0 size-4"
-					in:scale={{ duration: 300, opacity: 1 }}
+					in:scale={{ duration: barebones.current ? 0 : 300, opacity: 1 }}
 				/>
 			{/if}
 		</div>

@@ -216,8 +216,8 @@ import { launchConfetti } from '#lib/effects.ts';
 			src={animal}
 			alt="Successfully found!"
 			class="animal-art pointer-events-none absolute size-3/4"
-			in:scale={{ duration: 300, easing: backOut }}
-			out:scale={{ duration: 300 }}
+			in:scale={{ duration: barebones.current ? 0 : 300, easing: backOut }}
+			out:scale={{ duration: barebones.current ? 0 : 300 }}
 		/>
 	{/if}
 	{@render cross(cell.userstate === 'misflagged', 'text-error')}
@@ -237,10 +237,13 @@ import { launchConfetti } from '#lib/effects.ts';
 			stroke-width="4"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-			out:scale={{ duration: 300 }}
+					out:scale={{ duration: barebones.current ? 0 : 300 }}
 		>
-			<path d="M18 6 6 18" in:draw={{ duration: 200 }} />
-			<path d="m6 6 12 12" in:draw={{ delay: 100, duration: 200 }} />
+			<path d="M18 6 6 18" in:draw={{ duration: barebones.current ? 0 : 200 }} />
+			<path
+				d="m6 6 12 12"
+				in:draw={{ delay: barebones.current ? 0 : 100, duration: barebones.current ? 0 : 200 }}
+			/>
 		</svg>
 	{/if}
 {/snippet}

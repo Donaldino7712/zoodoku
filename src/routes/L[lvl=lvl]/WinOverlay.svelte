@@ -50,11 +50,11 @@
 		randomEncouragement = encouragement[Math.floor(Math.random() * encouragement.length)];
 		if (!barebones.current)
 			void launchConfetti({
-			particleCount: 100,
-			spread: 70,
-			scalar: 2,
-			origin: { y: 0.8 }
-		});
+				particleCount: 100,
+				spread: 70,
+				scalar: 2,
+				origin: { y: 0.8 }
+			});
 		if (!p.customseed)
 			level.current = Math.max(
 				untrack(() => level.current),
@@ -66,9 +66,12 @@
 {#if p.visible}
 	<div
 		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-		in:fade={{ delay: 800 }}
+		in:fade={{ delay: 800, duration: barebones.current ? 0 : 400 }}
 	>
-		<div class="min-w-2xs rounded-3xl bg-bg p-4" in:scale={{ delay: 300 }}>
+		<div
+			class="min-w-2xs rounded-3xl bg-bg p-4"
+			in:scale={{ delay: 300, duration: barebones.current ? 0 : 300 }}
+		>
 			<h3 class="mt-1 text-center text-2xl font-bold">{randomEncouragement}!</h3>
 			{#if !p.customseed}
 				<button

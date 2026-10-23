@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { scale } from 'svelte/transition';
 	import type { Component } from 'svelte';
+	import { barebones } from '#lib/config.svelte.ts';
 
 	let p: { apply: () => boolean; cooldown: number; icon: Component } = $props();
 
@@ -27,7 +28,7 @@
 				'absolute -bottom-3 mx-auto h-6 w-10 items-center justify-center',
 				'inset-x-0 z-10 flex rounded-full bg-depress drop-shadow'
 			]}
-			transition:scale
+			transition:scale={{ duration: barebones.current ? 0 : 300 }}
 		>
 			{cooldownLeft}
 		</div>

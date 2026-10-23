@@ -19,7 +19,7 @@
 {#if visible}
 	<div
 		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-		transition:fade={{ duration: 200 }}
+		transition:fade={{ duration: barebones.current ? 0 : 200 }}
 	>
 		<div class="flex min-w-2xs flex-col gap-3 rounded-3xl bg-bg p-4">
 			<button

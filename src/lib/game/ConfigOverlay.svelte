@@ -68,6 +68,13 @@
 					>
 						Share this level
 					</button>
+				{:else if shareText}
+					<button
+						class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+						onclick={() => navigator.clipboard.writeText(shareText)}
+					>
+						Copy share text
+					</button>
 				{/if}
 			</div>
 		</div>

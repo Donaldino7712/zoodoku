@@ -93,8 +93,4 @@
 		<PowerUp apply={discoverAnimal} cooldown={30} icon={search} />
 		<PowerUp apply={() => board?.crossRandomCells(5)} cooldown={30} icon={crossrandom} />
 	</div>
-	<div class="flex">
-		<a href="/L{params.lvl - 1}" class="bg-layer p-4">prev</a>
-		<a href="/L{params.lvl + 1}" class="bg-layer p-4">next</a>
-	</div>
 </main>

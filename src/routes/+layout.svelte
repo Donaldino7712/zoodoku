@@ -26,11 +26,18 @@
 	$effect(() => {
 		document.documentElement.classList.toggle('dark', theme.current === 'dark');
 		document.documentElement.classList.toggle('dark-ctp', theme.current === 'dark-ctp');
+
+		const backgroundColor = getComputedStyle(document.documentElement)
+			.getPropertyValue('--color-bg')
+			.trim();
+		document.querySelector('meta[name="theme-color"]')?.setAttribute('content', backgroundColor);
+		document.documentElement.style.accentColor = backgroundColor;
 	});
 </script>
 
 <svelte:head>
 	<link rel="icon" href="/icons/icon.svg" />
+	<meta name="theme-color" content="#f7e9d1" />
 	<title>Zoodoku</title>
 </svelte:head>
 

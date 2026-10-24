@@ -24,7 +24,7 @@
 	});
 	type GenerationState =
 		| { status: 'loading'; attempts: number }
-		| { status: 'ready'; board: Board }
+		| { status: 'ready'; board: Board; level: number }
 		| { status: 'error'; message: string };
 
 	let generation = $state<GenerationState>({ status: 'loading', attempts: 0 });
@@ -41,7 +41,7 @@
 			if (!cancelled) generation = { status: 'loading', attempts: progress.attempts };
 		})
 			.then((board) => {
-				if (!cancelled) generation = { status: 'ready', board };
+				if (!cancelled) generation = { status: 'ready', board, level: params.lvl };
 			})
 			.catch((error: unknown) => {
 				if (!cancelled)
@@ -73,7 +73,7 @@
 </script>
 
 {#key params.lvl}
-	{#if generation.status === 'ready'}
+	{#if generation.status === 'ready' && generation.level === params.lvl}
 		{#if providedstatehash}
 			<div
 				class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
@@ -122,7 +122,8 @@
 			shareText={`Try solving my level ${params.lvl} of Zoodoku! https://${window.location.hostname}/L${params.lvl}?s=${seed.current}&h=${generation.board.statehash}`}
 			backIsHome={page.url.searchParams.has('s')}
 		/>
-	{:else if generation.status === 'loading'}
+	{:else if generation.status === 'loading' || generation.status === 'ready'}
+		{@const attempts = generation.status === 'loading' ? generation.attempts : 0}
 		<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">
 			<div class="w-full max-w-sm text-center">
 				<div
@@ -130,14 +131,14 @@
 					role="progressbar"
 					aria-valuemin="0"
 					aria-valuemax="100"
-					aria-valuenow={progressPercent(generation.attempts)}
+					aria-valuenow={progressPercent(attempts)}
 				>
 					<div
 						class="h-full rounded-full bg-text transition-[width] duration-150"
-						style={`width: ${progressPercent(generation.attempts)}%`}
+						style={`width: ${progressPercent(attempts)}%`}
 					></div>
 				</div>
-				{#if generation.attempts > typicalGenerationAttempts}
+				{#if attempts > typicalGenerationAttempts}
 					<p class="mt-4 text-sm text-text">This is taking a bit longer than usual. Get ready!</p>
 				{/if}
 			</div>

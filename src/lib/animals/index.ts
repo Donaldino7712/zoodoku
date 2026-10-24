@@ -15,6 +15,7 @@ import egg42 from './egg_42.svg';
 import egg56 from './egg_56.png';
 import egg64 from './egg_64.svg';
 import egg67 from './egg_67.svg';
+import egg100 from './egg_100.svg';
 import egg69 from './egg_69.png';
 import egg420 from './egg_420.svg';
 import egg451 from './egg_451.svg';
@@ -31,6 +32,7 @@ const easterEggs: Record<number, string> = {
 	56: egg56,
 	64: egg64,
 	67: egg67,
+	100: egg100,
 	69: egg69,
 	420: egg420,
 	451: egg451,

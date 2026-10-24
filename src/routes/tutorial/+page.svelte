@@ -4,11 +4,9 @@
 	import LossOverlay from '#lib/game/LossOverlay.svelte';
 	import { Board } from '#lib/game/index.svelte.ts';
 	import { goto } from '$app/navigation';
-	import checks from '#lib/powerups/checks.svg';
-	import search from '#lib/powerups/search.svg';
-	import crossrandom from '#lib/powerups/crossrandom.svg';
 	import { fade, scale } from 'svelte/transition';
 	import { animations } from '#lib/config.svelte.ts';
+	import { Dices, Grid2x2Check, Search } from '@lucide/svelte';
 
 	const boardSize = 5;
 	const animalColumns = [3, 0, 2, 4, 1];
@@ -108,24 +106,15 @@
 			</p>
 			<div class="mt-4 space-y-2 text-sm">
 				<div class="flex items-center gap-2">
-					<div
-						class="size-8 shrink-0 bg-text"
-						style="mask-image: url({`"${checks}"`}); mask-size: contain; mask-repeat: no-repeat; mask-position: center;"
-					></div>
+					<Grid2x2Check class="size-8 shrink-0 text-text" />
 					<p>Cross out every cell ruled out by animals you have found.</p>
 				</div>
 				<div class="flex items-center gap-2">
-					<div
-						class="size-8 shrink-0 bg-text"
-						style="mask-image: url({`"${search}"`}); mask-size: contain; mask-repeat: no-repeat; mask-position: center;"
-					></div>
+					<Search class="size-8 shrink-0 text-text" />
 					<p>Reveal a random animal.</p>
 				</div>
 				<div class="flex items-center gap-2">
-					<div
-						class="size-8 shrink-0 bg-text"
-						style="mask-image: url({`"${crossrandom}"`}); mask-size: contain; mask-repeat: no-repeat; mask-position: center;"
-					></div>
+					<Dices class="size-8 shrink-0 text-text" />
 					<p>Cross out five random empty cells.</p>
 				</div>
 			</div>

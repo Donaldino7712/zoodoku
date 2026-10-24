@@ -81,8 +81,8 @@
 			>
 				<div class="mx-4 min-w-2xs rounded-3xl bg-bg p-4">
 					<p class="font-bold">
-						The shared link has had parts of the level prefilled. Would you like to continue or start
-						fresh?
+						The shared link has had parts of the level prefilled. Would you like to continue or
+						start fresh?
 					</p>
 					<button
 						class="mt-2 w-full p-2 text-center underline"
@@ -94,7 +94,10 @@
 					>
 						Continue
 					</button>
-					<button class="w-full p-2 text-center underline" onclick={() => (providedstatehash = null)}>
+					<button
+						class="w-full p-2 text-center underline"
+						onclick={() => (providedstatehash = null)}
+					>
 						Start fresh
 					</button>
 				</div>
@@ -117,33 +120,34 @@
 			animal={getAnimal(params.lvl)}
 			onerror={() => (playSound('lose'), lives--)}
 			shareText={`Try solving my level ${params.lvl} of Zoodoku! https://${window.location.hostname}/L${params.lvl}?s=${seed.current}&h=${generation.board.statehash}`}
+			backIsHome={page.url.searchParams.has('s')}
 		/>
 	{:else if generation.status === 'loading'}
-	<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">
-		<div class="w-full max-w-sm text-center">
-			<div
-				class="mt-4 h-3 overflow-hidden rounded-full bg-layer"
-				role="progressbar"
-				aria-valuemin="0"
-				aria-valuemax="100"
-				aria-valuenow={progressPercent(generation.attempts)}
-			>
+		<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">
+			<div class="w-full max-w-sm text-center">
 				<div
-					class="h-full rounded-full bg-text transition-[width] duration-150"
-					style={`width: ${progressPercent(generation.attempts)}%`}
-				></div>
+					class="mt-4 h-3 overflow-hidden rounded-full bg-layer"
+					role="progressbar"
+					aria-valuemin="0"
+					aria-valuemax="100"
+					aria-valuenow={progressPercent(generation.attempts)}
+				>
+					<div
+						class="h-full rounded-full bg-text transition-[width] duration-150"
+						style={`width: ${progressPercent(generation.attempts)}%`}
+					></div>
+				</div>
+				{#if generation.attempts > typicalGenerationAttempts}
+					<p class="mt-4 text-sm text-text">This is taking a bit longer than usual. Get ready!</p>
+				{/if}
 			</div>
-			{#if generation.attempts > typicalGenerationAttempts}
-				<p class="mt-4 text-sm text-text">This is taking a bit longer than usual. Get ready!</p>
-			{/if}
-		</div>
-	</main>
-{:else}
-	<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">
-		<div class="text-center">
-			<p class="text-red-600">{generation.message}</p>
-			<button class="mt-4 underline" onclick={retry}>Try again</button>
-		</div>
-	</main>
-{/if}
+		</main>
+	{:else}
+		<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">
+			<div class="text-center">
+				<p class="text-red-600">{generation.message}</p>
+				<button class="mt-4 underline" onclick={retry}>Try again</button>
+			</div>
+		</main>
+	{/if}
 {/key}

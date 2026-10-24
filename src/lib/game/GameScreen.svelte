@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { playSound } from '#lib/audio.ts';
-	import { ChevronLeft, Dices, Grid2X2Check, Search } from '@lucide/svelte';
+	import { ChevronLeft, Dices, Grid2X2Check, Home, Search } from '@lucide/svelte';
 	import ConfigOverlay from './ConfigOverlay.svelte';
 	import Counter from './Counter.svelte';
 	import Lives from './Lives.svelte';
-	import PowerUp from '#lib/powerups/PowerUp.svelte';
+	import PowerUp from './PowerUp.svelte';
 	import Zoodoku from './Zoodoku.svelte';
 	import type { Board } from './index.svelte';
+	import { goto } from '$app/navigation';
 
 	let {
 		board,
@@ -17,7 +18,8 @@
 		shareText,
 		instructions,
 		highlight,
-		onerror
+		onerror,
+		backIsHome
 	}: {
 		board: Board;
 		animal: string;
@@ -28,6 +30,7 @@
 		instructions?: string;
 		highlight?: { row: number; column: number };
 		onerror?: () => void;
+		backIsHome?: boolean;
 	} = $props();
 
 	function discoverAnimal(): boolean {
@@ -40,10 +43,17 @@
 <main class="mx-auto grid max-h-dvh min-h-dvh max-w-2xl grid-rows-[auto_auto_1fr]">
 	<div class="grid grid-cols-[auto_1fr_auto] p-8">
 		<div class="flex items-start">
-			<button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => history.back()}>
-				<ChevronLeft class="preview-icon" />
-				<span class="sr-only">Back</span>
-			</button>
+			{#if !backIsHome}
+				<button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => history.back()}>
+					<ChevronLeft />
+					<span class="sr-only">Back</span>
+				</button>
+			{:else}
+				<button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => goto('/')}>
+					<Home />
+					<span class="sr-only">Home</span>
+				</button>
+			{/if}
 		</div>
 		<div>
 			<h2 class="text-center font-bold">{title}</h2>

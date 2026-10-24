@@ -140,6 +140,8 @@ export class Board {
 	}
 }
 
+const GROUP_HUE_SLOTS = [0, 45, 90, 135, 180, 225, 270, 315];
+
 export interface GenerationProgress {
 	attempts: number;
 	maxAttempts: number;
@@ -264,7 +266,7 @@ function growRegions(cells: Cell[][], size: number, random: () => number): void 
 
 function chooseGroupHues(cells: Cell[][], groupCount: number, random: () => number): number[] {
 	const adjacency = buildGroupAdjacency(cells, groupCount);
-	const hueSlots = [0, 30, 60, 120, 180, 240, 300, 330].slice(0, groupCount);
+	const hueSlots = GROUP_HUE_SLOTS.slice(0, groupCount);
 	const hues = new Array<number>(groupCount);
 	const usedSlots = new Set<number>();
 

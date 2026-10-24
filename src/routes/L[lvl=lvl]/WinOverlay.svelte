@@ -7,7 +7,15 @@
 	import { untrack } from 'svelte';
 	import { fade, scale } from 'svelte/transition';
 
-	let p: { next: number; visible: boolean; customseed: boolean; retry: () => void } = $props();
+	let p: {
+		next: number;
+		visible: boolean;
+		customseed: boolean;
+		retry: () => void;
+		dailyTime?: string;
+		dailyStreak?: number;
+		dailyShareText?: string;
+	} = $props();
 
 	const encouragement = [
 		'Awesome',
@@ -76,6 +84,21 @@
 			in:scale={{ delay: animations.current ? 300 : 0, duration: animations.current ? 300 : 0 }}
 		>
 			<h3 class="mt-1 text-center text-2xl font-bold">{randomEncouragement}!</h3>
+			{#if p.dailyTime}
+				<p class="mt-2 text-center">Today's Zoodle: <strong>{p.dailyTime}</strong></p>
+				{#if p.dailyStreak}
+					<p class="mt-1 text-center">{p.dailyStreak} day win streak</p>
+				{/if}
+				<button
+					class="mt-4 w-full clicky rounded-lg border border-depress bg-layer p-4 drop-shadow"
+					onclick={() =>
+						p.dailyShareText &&
+						(navigator.share?.({ text: p.dailyShareText }) ??
+							navigator.clipboard.writeText(p.dailyShareText))}
+				>
+					Share
+				</button>
+			{/if}
 			{#if !p.customseed}
 				<button
 					class="mt-4 w-full clicky rounded-lg border border-depress bg-layer p-4 drop-shadow"

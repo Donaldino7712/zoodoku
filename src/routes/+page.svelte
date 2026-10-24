@@ -1,12 +1,27 @@
 <script>
-	import { level } from '#lib/config.svelte.ts';
+	import { dailyResult, level } from '#lib/config.svelte.ts';
+	import { loadDailyResult } from '#lib/daily.ts';
 	import { browser } from '$app/env';
 	import { goto } from '$app/navigation';
+
+	let daily = $derived(loadDailyResult());
+	let lastDaily = $derived(dailyResult.current);
 </script>
 
 <main class="mt-1/3 mx-auto flex min-h-dvh max-w-lg flex-col items-center p-8">
 	<img src="/icons/icon.svg" alt="logo" class="size-2/3" />
 	{#if browser}
+		<button
+			class="mt-4 w-full clicky rounded-lg border border-depress bg-layer p-4 drop-shadow"
+			onclick={() => goto('/daily')}
+		>
+			<p>Play Daily</p>
+			{#if daily}
+				<p class="text-xs">{daily.streak} day streak</p>
+			{:else if lastDaily?.result === 'win'}
+				<p class="text-xs">Don't lose your {lastDaily.streak} day streak!</p>
+			{/if}
+		</button>
 		<button
 			class="mt-4 w-full clicky rounded-lg border border-depress bg-layer p-4 drop-shadow"
 			onclick={() => goto(`/L${level.current}`)}

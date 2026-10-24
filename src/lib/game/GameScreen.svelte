@@ -19,7 +19,8 @@
 		instructions,
 		highlight,
 		onerror,
-		backIsHome
+		backIsHome,
+		powerups = true
 	}: {
 		board: Board;
 		animal: string;
@@ -31,6 +32,7 @@
 		highlight?: { row: number; column: number };
 		onerror?: () => void;
 		backIsHome?: boolean;
+		powerups?: boolean;
 	} = $props();
 
 	function discoverAnimal(): boolean {
@@ -72,9 +74,11 @@
 		<Zoodoku {board} {onerror} {animal} {highlight} />
 	</div>
 
-	<div class="flex items-center justify-center gap-4">
-		<PowerUp apply={() => board.applyRulesAsChecks()} cooldown={10} icon={Grid2X2Check} />
-		<PowerUp apply={discoverAnimal} cooldown={30} icon={Search} />
-		<PowerUp apply={() => board.crossRandomCells(5)} cooldown={30} icon={Dices} />
-	</div>
+	{#if powerups}
+		<div class="flex items-center justify-center gap-4">
+			<PowerUp apply={() => board.applyRulesAsChecks()} cooldown={10} icon={Grid2X2Check} />
+			<PowerUp apply={discoverAnimal} cooldown={30} icon={Search} />
+			<PowerUp apply={() => board.crossRandomCells(5)} cooldown={30} icon={Dices} />
+		</div>
+	{/if}
 </main>

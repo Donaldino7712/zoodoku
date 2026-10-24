@@ -72,52 +72,53 @@
 	}
 </script>
 
-{#if generation.status === 'ready'}
-	{#if providedstatehash}
-		<div
-			class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-			transition:fade={{ duration: animations.current ? 400 : 0 }}
-		>
-			<div class="mx-4 min-w-2xs rounded-3xl bg-bg p-4">
-				<p class="font-bold">
-					The shared link has had parts of the level prefilled. Would you like to continue or start
-					fresh?
-				</p>
-				<button
-					class="mt-2 w-full p-2 text-center underline"
-					onclick={() => {
-						if (generation.status !== 'ready' || !providedstatehash) return;
-						generation.board.statehash = providedstatehash;
-						providedstatehash = null;
-					}}
-				>
-					Continue
-				</button>
-				<button class="w-full p-2 text-center underline" onclick={() => (providedstatehash = null)}>
-					Start fresh
-				</button>
+{#key params.lvl}
+	{#if generation.status === 'ready'}
+		{#if providedstatehash}
+			<div
+				class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+				transition:fade={{ duration: animations.current ? 400 : 0 }}
+			>
+				<div class="mx-4 min-w-2xs rounded-3xl bg-bg p-4">
+					<p class="font-bold">
+						The shared link has had parts of the level prefilled. Would you like to continue or start
+						fresh?
+					</p>
+					<button
+						class="mt-2 w-full p-2 text-center underline"
+						onclick={() => {
+							if (generation.status !== 'ready' || !providedstatehash) return;
+							generation.board.statehash = providedstatehash;
+							providedstatehash = null;
+						}}
+					>
+						Continue
+					</button>
+					<button class="w-full p-2 text-center underline" onclick={() => (providedstatehash = null)}>
+						Start fresh
+					</button>
+				</div>
 			</div>
-		</div>
-	{/if}
+		{/if}
 
-	<WinOverlay
-		visible={generation.board.won}
-		next={params.lvl + 1}
-		customseed={page.url.searchParams.has('s')}
-		{retry}
-	/>
-	<LossOverlay visible={lives <= 0} {retry} />
+		<WinOverlay
+			visible={generation.board.won}
+			next={params.lvl + 1}
+			customseed={page.url.searchParams.has('s')}
+			{retry}
+		/>
+		<LossOverlay visible={lives <= 0} {retry} />
 
-	<GameScreen
-		board={generation.board}
-		{lives}
-		max={boardSize}
-		title={`Level ${params.lvl}`}
-		animal={getAnimal(params.lvl)}
-		onerror={() => (playSound('lose'), lives--)}
-		shareText={`Try solving my level ${params.lvl} of Zoodoku! https://${window.location.hostname}/L${params.lvl}?s=${seed.current}&h=${generation.board.statehash}`}
-	/>
-{:else if generation.status === 'loading'}
+		<GameScreen
+			board={generation.board}
+			{lives}
+			max={boardSize}
+			title={`Level ${params.lvl}`}
+			animal={getAnimal(params.lvl)}
+			onerror={() => (playSound('lose'), lives--)}
+			shareText={`Try solving my level ${params.lvl} of Zoodoku! https://${window.location.hostname}/L${params.lvl}?s=${seed.current}&h=${generation.board.statehash}`}
+		/>
+	{:else if generation.status === 'loading'}
 	<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">
 		<div class="w-full max-w-sm text-center">
 			<div
@@ -145,3 +146,4 @@
 		</div>
 	</main>
 {/if}
+{/key}

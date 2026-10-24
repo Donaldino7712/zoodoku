@@ -46,7 +46,7 @@
 
 	$effect(() => {
 		if (!p.visible) return;
-		setTimeout(() => playSound('win'), 500);
+		let timeoutId = setTimeout(() => playSound('win'), 500);
 		randomEncouragement = encouragement[Math.floor(Math.random() * encouragement.length)];
 		if (!barebones.current)
 			void launchConfetti({
@@ -60,6 +60,9 @@
 				untrack(() => level.current),
 				p.next
 			);
+		return () => {
+			clearTimeout(timeoutId);
+		};
 	});
 </script>
 

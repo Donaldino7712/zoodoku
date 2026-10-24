@@ -142,6 +142,11 @@
 		dragState = undefined;
 	}
 
+	function handleContextMenu(event: MouseEvent): void {
+		event.preventDefault();
+		markCell();
+	}
+
 	function handleCellTouchStart(event: TouchEvent): void {
 		const now = Date.now();
 		const isDoubleTap = now - lastTouchAt < 300;
@@ -209,6 +214,7 @@
 	]}
 	disabled={cell.userstate === 'animal' || cell.userstate === 'misflagged'}
 	onclick={handleClick}
+	oncontextmenu={handleContextMenu}
 	bind:this={el}
 >
 	{#if cell.userstate === 'animal'}

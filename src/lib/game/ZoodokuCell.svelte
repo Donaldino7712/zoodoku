@@ -200,7 +200,7 @@
 	onmouseup={handleMouseUp}
 	class={[
 		'flex aspect-square size-full min-h-1 min-w-1 items-center',
-		'relative clicky justify-center rounded-lg',
+		'relative clicky justify-center rounded',
 		highlight && 'z-10 outline-4 outline-offset-2 outline-error',
 		topLeft && 'rounded-tl-xl',
 		topRight && 'rounded-tr-xl',

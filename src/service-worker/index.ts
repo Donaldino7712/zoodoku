@@ -5,8 +5,8 @@ import { resolve } from '$app/paths';
 
 const staticCache = `zoodoku-static-${version}`;
 const runtimeCache = `zoodoku-runtime-${version}`;
-const precache = [...immutable, ...assets, ...prerendered].map(({ path }) => path);
 const root = resolve('/');
+const precache = [root, ...[...immutable, ...assets, ...prerendered].map(({ path }) => path)];
 
 self.addEventListener('install', (event) => {
 	event.waitUntil(
@@ -42,7 +42,9 @@ self.addEventListener('fetch', (event) => {
 			fetch(event.request)
 				.then((response) => {
 					const copy = response.clone();
-					void caches.open(runtimeCache).then((cache) => cache.put(event.request, copy));
+					event.waitUntil(
+						caches.open(runtimeCache).then((cache) => cache.put(event.request, copy))
+					);
 					return response;
 				})
 				.catch(async () => {
@@ -61,7 +63,7 @@ self.addEventListener('fetch', (event) => {
 			return fetch(event.request).then((response) => {
 				if (!response || response.status !== 200 || response.type !== 'basic') return response;
 				const copy = response.clone();
-				void caches.open(runtimeCache).then((cache) => cache.put(event.request, copy));
+				event.waitUntil(caches.open(runtimeCache).then((cache) => cache.put(event.request, copy)));
 				return response;
 			});
 		})

@@ -37,6 +37,12 @@
 	--cell-lum: 81%;
 }
 
+*,
+*::before,
+*::after {
+	user-select: none;
+}
+
 @utility clicky {
 	@apply transition-transform duration-200 not-disabled:active:scale-95;
 }

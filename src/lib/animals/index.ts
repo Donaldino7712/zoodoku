@@ -1,6 +1,7 @@
 import cat from './cat.svg';
 import dog from './dog.svg';
 import frog from './frog.svg';
+import celebration from './celebration.svg';
 import panda from './panda.svg';
 import bear from './bear.svg';
 import rabbit from './rabbit.svg';
@@ -15,7 +16,6 @@ import egg42 from './egg_42.svg';
 import egg56 from './egg_56.png';
 import egg64 from './egg_64.svg';
 import egg67 from './egg_67.svg';
-import egg100 from './egg_100.svg';
 import egg69 from './egg_69.png';
 import egg420 from './egg_420.svg';
 import egg451 from './egg_451.svg';
@@ -27,12 +27,12 @@ import egg8008 from './egg_8008.svg';
 
 const images = [cat, dog, frog, panda, bear, rabbit, koala, lion, owl, chicken, robot, mouse];
 const easterEggs: Record<number, string> = {
+	18: celebration,
 	21: egg21,
 	42: egg42,
 	56: egg56,
 	64: egg64,
 	67: egg67,
-	100: egg100,
 	69: egg69,
 	420: egg420,
 	451: egg451,
@@ -42,6 +42,7 @@ const easterEggs: Record<number, string> = {
 	1984: egg1984,
 	8008: egg8008
 };
+for (let i = 100; i < 10_0000; i += 100) easterEggs[i] = celebration;
 
 export function getAnimal(n: number) {
 	if (easterEggs[n]) return easterEggs[n];

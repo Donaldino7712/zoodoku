@@ -31,6 +31,12 @@
 					column={j}
 					{boardElement}
 					hue={p.board.groupHues[cell.group]}
+					groupBorders={{
+						top: i === 0 || p.board.cells[i - 1][j]?.group !== cell.group,
+						right: j === row.length - 1 || row[j + 1]?.group !== cell.group,
+						bottom: i === p.board.cells.length - 1 || p.board.cells[i + 1][j]?.group !== cell.group,
+						left: j === 0 || row[j - 1]?.group !== cell.group
+					}}
 					topLeft={i === 0 && j === 0}
 					topRight={i === 0 && j === row.length - 1}
 					bottomLeft={i === p.board.cells.length - 1 && j === 0}

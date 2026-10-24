@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { animations, audio, barebones, theme, vibrate } from '#lib/config.svelte.ts';
+	import { animations, audio, barebones, colorBlind, theme, vibrate } from '#lib/config.svelte.ts';
 	import { Cog } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
@@ -53,6 +53,14 @@
 				>
 					<span>Performance</span>
 					<span class="font-semibold">{barebones.current ? 'On' : 'Off'}</span>
+				</button>
+				<button
+					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+					onclick={() => toggle(colorBlind)}
+					aria-pressed={colorBlind.current}
+				>
+					<span>Color blind mode</span>
+					<span class="font-semibold">{colorBlind.current ? 'On' : 'Off'}</span>
 				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"

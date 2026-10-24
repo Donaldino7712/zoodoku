@@ -3,7 +3,7 @@
 	import type { Board, Cell } from './index.svelte';
 	import { backOut } from 'svelte/easing';
 	import { playSound } from '#lib/audio.ts';
-	import { animations, barebones, vibrate } from '#lib/config.svelte.ts';
+	import { animations, colorBlind, vibrate } from '#lib/config.svelte.ts';
 	import { launchConfetti } from '#lib/effects.ts';
 
 	export type DragAction = 'cross' | 'uncross';
@@ -17,6 +17,7 @@
 		column,
 		boardElement,
 		hue,
+		groupBorders,
 		topLeft = false,
 		topRight = false,
 		bottomLeft = false,
@@ -32,6 +33,7 @@
 		column: number;
 		boardElement?: HTMLDivElement;
 		hue: number;
+		groupBorders: { top: boolean; right: boolean; bottom: boolean; left: boolean };
 		topLeft?: boolean;
 		topRight?: boolean;
 		bottomLeft?: boolean;
@@ -205,7 +207,11 @@
 	onmouseup={handleMouseUp}
 	class={[
 		'flex aspect-square size-full min-h-1 min-w-1 items-center',
-		'relative clicky justify-center rounded',
+		'relative clicky justify-center rounded border-2 border-transparent',
+		colorBlind.current && groupBorders.top && 'border-t-white',
+		colorBlind.current && groupBorders.right && 'border-r-white',
+		colorBlind.current && groupBorders.bottom && 'border-b-white',
+		colorBlind.current && groupBorders.left && 'border-l-white',
 		highlight && 'z-10 outline-4 outline-offset-2 outline-error',
 		topLeft && 'rounded-tl-xl',
 		topRight && 'rounded-tr-xl',

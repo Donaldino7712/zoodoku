@@ -59,7 +59,8 @@ export class Board {
 		let bit = 1n;
 		for (const row of this.cells)
 			for (const cell of row) {
-				if (cell.userstate !== undefined) mask |= bit;
+				if (cell.userstate !== undefined && !(cell.animal && cell.userstate === 'crossed'))
+					mask |= bit;
 				bit <<= 1n;
 			}
 		return mask === 0n ? '' : mask.toString(16);

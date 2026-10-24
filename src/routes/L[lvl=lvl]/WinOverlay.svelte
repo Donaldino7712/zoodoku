@@ -85,7 +85,7 @@
 		>
 			<h3 class="mt-1 text-center text-2xl font-bold">{randomEncouragement}!</h3>
 			{#if p.dailyTime}
-				<p class="mt-2 text-center">Today's Zoodle: <strong>{p.dailyTime}</strong></p>
+				<p class="mt-2 text-center">Today's Zoodoku: <strong>{p.dailyTime}</strong></p>
 				{#if p.dailyStreak}
 					<p class="mt-1 text-center">{p.dailyStreak} day win streak</p>
 				{/if}

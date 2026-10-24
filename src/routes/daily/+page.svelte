@@ -71,8 +71,8 @@
 
 	const shareText = $derived(
 		completed?.result === 'win'
-			? `I did today's Zoodle in ${formatDailyTime(completed.seconds)}! ${page.url.origin}/daily`
-			: `I tried today's Zoodle. Can you do better? ${page.url.origin}/daily`
+			? `I did today's Zoodoku in ${formatDailyTime(completed.seconds)}! ${page.url.origin}/daily`
+			: `I tried today's Zoodoku. Can you do better? ${page.url.origin}/daily`
 	);
 </script>
 
@@ -85,8 +85,8 @@
 		</h1>
 		<p class="mt-3 text-xl">
 			{completed.result === 'win'
-				? `You did today's Zoodle in ${formatDailyTime(completed.seconds)}!`
-				: "Better luck with tomorrow's Zoodle!"}
+				? `You did today's Zoodoku in ${formatDailyTime(completed.seconds)}!`
+				: "Better luck with tomorrow's Zoodoku!"}
 		</p>
 		<p class="mt-4 font-bold">{completed.streak} day win streak</p>
 		<p class="mt-2">Come back tomorrow to continue your streak!</p>
@@ -122,7 +122,7 @@
 		powerups={false}
 	/>
 {:else if generation.status === 'loading'}
-	<main class="flex min-h-dvh items-center justify-center p-8">Generating today's Zoodle...</main>
+	<main class="flex min-h-dvh items-center justify-center p-8">Generating today's Zoodoku...</main>
 {:else}
 	<main class="flex min-h-dvh flex-col items-center justify-center p-8 text-center">
 		<p>{generation.message}</p>

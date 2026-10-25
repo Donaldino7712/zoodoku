@@ -1,5 +1,5 @@
 import { self } from '$app/service-worker';
-import { version } from '$app/env';
+import { version, dev } from '$app/env';
 import { assets, immutable, prerendered } from '$app/manifest';
 import { resolve } from '$app/paths';
 
@@ -35,6 +35,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+	if (dev) return;
 	if (event.request.method !== 'GET') return;
 
 	if (event.request.mode === 'navigate') {

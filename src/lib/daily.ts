@@ -33,7 +33,7 @@ export function loadDailyResult(date = new Date()): DailyResult | undefined {
 }
 
 export function saveDailyResult(
-	result: Omit<DailyResult, 'date' | 'streak'>,
+	result: Omit<NonNullable<DailyResult>, 'date' | 'streak'>,
 	date = new Date()
 ): DailyResult {
 	const today = dateKey(date);
@@ -49,7 +49,7 @@ export function saveDailyResult(
 					? previous.streak + 1
 					: 1
 			: 0;
-	const complete = { ...result, date: today, streak };
+	const complete: DailyResult = { ...result, date: today, streak };
 
 	dailyResult.current = complete;
 	return complete;

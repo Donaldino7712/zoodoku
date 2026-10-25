@@ -5,7 +5,7 @@
 	import { animations, barebones } from '#lib/config.svelte.ts';
 	import { launchConfetti } from '#lib/effects.ts';
 	import { untrack } from 'svelte';
-	import { fade, scale } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 
 	let p: {
 		next: number;
@@ -76,12 +76,16 @@
 
 {#if p.visible}
 	<div
-		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-		in:fade={{ delay: animations.current ? 800 : 0, duration: animations.current ? 400 : 0 }}
+		class="absolute inset-0 z-80 flex items-end justify-center bg-black/50"
+		in:fade={{ delay: animations.current ? 500 : 0, duration: animations.current ? 400 : 0 }}
 	>
 		<div
-			class="min-w-2xs rounded-3xl bg-bg p-4"
-			in:scale={{ delay: animations.current ? 300 : 0, duration: animations.current ? 300 : 0 }}
+			class="mb-8 min-w-2xs rounded-3xl bg-bg p-4"
+			in:fly={{
+				delay: animations.current ? 300 : 0,
+				duration: animations.current ? 600 : 0,
+				y: 50
+			}}
 		>
 			<h3 class="mt-1 text-center text-2xl font-bold">{randomEncouragement}!</h3>
 			{#if p.dailyTime}

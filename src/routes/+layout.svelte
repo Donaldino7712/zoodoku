@@ -2,7 +2,7 @@
 	import './layout.css';
 	import type { LayoutProps } from './$types';
 	import { page } from '$app/state';
-import { animations, barebones, theme } from '#lib/config.svelte.ts';
+	import { animations, barebones, theme } from '#lib/config.svelte.ts';
 
 	let { children }: LayoutProps = $props();
 

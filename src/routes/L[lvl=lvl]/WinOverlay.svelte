@@ -76,7 +76,7 @@
 
 {#if p.visible}
 	<div
-		class="fixed inset-0 z-80 flex items-end justify-center bg-black/50"
+		class="fixed inset-0 z-80 flex items-end justify-center bg-black/50 md:items-center"
 		in:fade={{ delay: animations.current ? 500 : 0, duration: animations.current ? 400 : 0 }}
 	>
 		<div

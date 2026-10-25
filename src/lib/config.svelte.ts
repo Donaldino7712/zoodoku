@@ -39,12 +39,22 @@ export type DailyResult = v.InferInput<typeof dailyResultSchema>;
 
 export const dailyResult = new PersistedState<DailyResult>('zoodoku-daily-results', undefined);
 
-export function validateSave(save: Object) {
-	return v.safeParse(saveSchema, save).success;
+function decodeSave(save: string) {
+  // JSON.parse might throw an error if the decoded string isn't valid JSON
+  // We can handle it by just returning an empty object if it threw an error (it'll fail validation later on)
+  try {
+    return JSON.parse(atob(save))
+  } catch {
+    return {};
+  }
+}
+
+export function validateSave(save: Object | string) {
+	return v.safeParse(saveSchema, typeof save === "object" ? save : decodeSave(save)).success;
 }
 
 export function importSave(save: string) {
-	const decoded = JSON.parse(atob(save));
+  const decoded = decodeSave(save);
 	if (!validateSave(decoded)) return;
 	vibrate.current = decoded.vibrate;
 	audio.current = decoded.audio;

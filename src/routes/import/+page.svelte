@@ -5,11 +5,11 @@
 
 	if (!page.url.searchParams.has('d')) goto('/');
 
-	let progress = page.url.searchParams.get('d')!;
-	let isValid = validateSave(progress);
+	let save = page.url.searchParams.get('d')!;
+	let isValid = validateSave(save);
 
 	function onimport() {
-		importSave(progress);
+		importSave(save);
 		goto('/', { replace: true });
 	}
 </script>

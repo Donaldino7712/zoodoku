@@ -4,6 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
+		"preinstall": "npx -y only-allow@1.2.2 bun",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",

@@ -127,7 +127,7 @@
 			title={`Level ${params.lvl}`}
 			animal={getAnimal(params.lvl)}
 			onerror={() => (playSound('lose'), lives--)}
-			shareText={`Try solving my level ${params.lvl} of Zoodoku! ${page.url.origin}/L${params.lvl}?s=${seed.current}&h=${generation.board.statehash}`}
+			shareText={`Try solving my level ${params.lvl} of Zoodoku! ${page.url.origin}/L${params.lvl}?s=${usedseed}&h=${generation.board.statehash}&m=${usedmaxsize}`}
 			backIsHome={page.url.searchParams.has('s')}
 		/>
 	{:else if generation.status === 'loading' || generation.status === 'ready'}

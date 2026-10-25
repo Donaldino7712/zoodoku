@@ -166,7 +166,7 @@ export class Board {
 	}
 }
 
-const GROUP_HUE_SLOTS = [0, 25, 45, 90, 110, 135, 180, 225, 240, 270, 315, 330];
+const GROUP_HUE_SLOTS = [0, 45, 90, 135, 180, 225, 270, 315];
 
 export interface GenerationProgress {
 	attempts: number;

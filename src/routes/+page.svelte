@@ -1,12 +1,16 @@
 <script>
 	import { dailyResult, level } from '#lib/config.svelte.ts';
 	import { loadDailyResult } from '#lib/daily.ts';
+	import ManageProgressOverlay from '#lib/game/ManageProgressOverlay.svelte';
 	import { browser } from '$app/env';
 	import { goto } from '$app/navigation';
 
 	let daily = $derived(loadDailyResult());
 	let lastDaily = $derived(dailyResult.current);
+	let managementVisible = $state(false);
 </script>
+
+<ManageProgressOverlay bind:managementVisible />
 
 <main class="mt-1/3 mx-auto flex min-h-dvh max-w-lg flex-col items-center p-8">
 	<img src="/icons/icon.svg" alt="logo" class="size-2/3" />
@@ -39,6 +43,7 @@
 			{/each}
 		</div>
 		<button class="mt-4 w-full py-2 underline" onclick={() => goto('/tutorial')}> Tutorial </button>
+		<button class="mt-4 w-full py-2 underline" onclick={() => (managementVisible = !managementVisible)}> Manage Progress </button>
 	{:else}
 		<p class="mt-4">Loading...</p>
 	{/if}

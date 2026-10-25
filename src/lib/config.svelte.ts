@@ -15,7 +15,46 @@ export type DailyResult = {
 	seconds: number;
 	streak: number;
 };
+
 export const dailyResult = new PersistedState<DailyResult | undefined>(
 	'zoodoku-daily-results',
 	undefined
 );
+
+export function importProgress(progress: string) {
+  const decoded = JSON.parse(atob(progress));
+  vibrate.current = decoded.vibrate;
+  audio.current = decoded.audio;
+  barebones.current = decoded.barebones;
+  colorBlind.current = decoded.colorBlind;
+  animations.current = decoded.animations;
+  theme.current = decoded.theme;
+  seed.current = decoded.seed;
+  level.current = decoded.level;
+}
+
+export function exportProgress(): string {
+  const progress = btoa(JSON.stringify({
+    zoodoku: 1,
+    vibrate: vibrate.current,
+    audio: audio.current,
+    barebones: barebones.current,
+    colorBlind: colorBlind.current,
+    animations: animations.current,
+    theme: theme.current,
+    seed: seed.current,
+    level: level.current
+  }));
+  return progress;
+}
+
+export function resetProgress() {
+  vibrate.current = true;
+  audio.current = true;
+  barebones.current = false;
+  colorBlind.current = false;
+  animations.current = true;
+  theme.current = "light";
+  seed.current = Math.floor(Math.random() * 100000000);
+  level.current = 1;
+}

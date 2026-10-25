@@ -14,7 +14,7 @@
 	}
 </script>
 
-<div class="m-16 flex flex-col items-center justify-center gap-4">
+<main class="flex min-h-dvh flex-col items-center justify-center gap-4 p-4">
 	{#if isValid}
 		<p>Are you sure you want to import?</p>
 		<p class="font-extrabold text-error">You will lose all of your current progress!</p>
@@ -33,4 +33,4 @@
 			onclick={() => goto('/', { replace: true })}>Cancel</button
 		>
 	</div>
-</div>
+</main>

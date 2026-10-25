@@ -8,9 +8,7 @@
 	let timeout = $state(-1);
 
 	function onexport() {
-		navigator.clipboard.writeText(
-			`https://${window.location.hostname}/import?d=${exportSave()}`
-		);
+		navigator.clipboard.writeText(`https://${window.location.hostname}/import?d=${exportSave()}`);
 		exportClicked = true;
 		if (timeout !== -1) clearTimeout(timeout);
 		timeout = setTimeout(() => (exportClicked = false), 1.5e3);
@@ -48,7 +46,7 @@
 					{exportClicked ? 'Copied!' : 'Export'}
 				</button>
 				<button
-					class="mt-4 flex clicky items-center justify-between rounded-lg border text-bg border-error bg-error p-3 text-center"
+					class="mt-4 flex clicky items-center justify-between rounded-lg border border-error bg-error p-3 text-center text-bg"
 					onclick={onreset}
 				>
 					{resetClicked ? 'Are you sure?' : 'Reset progress'}

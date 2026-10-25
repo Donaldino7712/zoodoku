@@ -71,7 +71,9 @@
 
 	const shareText = $derived(
 		completed?.result === 'win'
-			? `I did today's Zoodoku in ${formatDailyTime(completed.seconds)}! ${page.url.origin}/daily`
+			? `I did today's Zoodoku in ${formatDailyTime(completed.seconds)}, winning ${completed.streak} day${
+					completed.streak === 1 ? '' : 's'
+				} in a row! ${page.url.origin}/daily`
 			: `I tried today's Zoodoku. Can you do better? ${page.url.origin}/daily`
 	);
 </script>

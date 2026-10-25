@@ -4,15 +4,6 @@ import * as v from 'valibot';
 const themeSchema = v.union([v.literal('light'), v.literal('dark'), v.literal('dark-ctp')]);
 type Theme = v.InferInput<typeof themeSchema>;
 
-export const vibrate = new PersistedState('zoodoku-vibrate', true);
-export const audio = new PersistedState('zoodoku-audio', true);
-export const barebones = new PersistedState('zoodoku-barebones', false);
-export const colorBlind = new PersistedState('zoodoku-color-blind', false);
-export const animations = new PersistedState('zoodoku-animations', true);
-export const theme = new PersistedState<Theme>('zoodoku-theme', 'light');
-export const seed = new PersistedState('zoodoku-seed', Math.floor(Math.random() * 1e8));
-export const level = new PersistedState('zoodoku-level', 1);
-
 const dailyResultSchema = v.optional(
 	v.object({
 		date: v.pipe(v.string(), v.isoDate(), v.minValue('2026-01-01')),
@@ -21,6 +12,7 @@ const dailyResultSchema = v.optional(
 		streak: v.pipe(v.number(), v.gtValue(0))
 	})
 );
+export type DailyResult = v.InferInput<typeof dailyResultSchema>;
 
 const saveSchema = v.object({
 	zoodoku: v.pipe(v.number(), v.literal(1)),
@@ -35,8 +27,14 @@ const saveSchema = v.object({
 	daily: dailyResultSchema
 });
 
-export type DailyResult = v.InferInput<typeof dailyResultSchema>;
-
+export const vibrate = new PersistedState('zoodoku-vibrate', true);
+export const audio = new PersistedState('zoodoku-audio', true);
+export const barebones = new PersistedState('zoodoku-barebones', false);
+export const colorBlind = new PersistedState('zoodoku-color-blind', false);
+export const animations = new PersistedState('zoodoku-animations', true);
+export const theme = new PersistedState<Theme>('zoodoku-theme', 'light');
+export const seed = new PersistedState('zoodoku-seed', Math.floor(Math.random() * 1e8));
+export const level = new PersistedState('zoodoku-level', 1);
 export const dailyResult = new PersistedState<DailyResult>('zoodoku-daily-results', undefined);
 
 function decodeSave(save: string) {

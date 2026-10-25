@@ -48,7 +48,7 @@
 					{exportClicked ? 'Copied!' : 'Export'}
 				</button>
 				<button
-					class="mt-4 flex clicky items-center justify-between rounded-lg border border-error bg-error p-3 text-center"
+					class="mt-4 flex clicky items-center justify-between rounded-lg border text-bg border-error bg-error p-3 text-center"
 					onclick={onreset}
 				>
 					{resetClicked ? 'Are you sure?' : 'Reset progress'}

@@ -23,7 +23,7 @@
 		return sizes[(params.lvl - 6) % sizes.length];
 	});
 	type GenerationState =
-		| { status: 'loading'; attempts: number }
+		| { status: 'loading'; attempts: number; startTime?: number }
 		| { status: 'ready'; board: Board; level: number }
 		| { status: 'error'; message: string };
 
@@ -32,13 +32,20 @@
 
 	let lives = $derived((params.lvl, 3));
 
+	let attemptsPerSecond = $derived.by(() => {
+		if (generation.status !== 'loading' || !generation.attempts || !generation.startTime) return 0;
+		const elapsedSeconds = (performance.now() - generation.startTime) / 1000;
+		return elapsedSeconds > 0 ? generation.attempts / elapsedSeconds : 0;
+	});
+
 	$effect(() => {
 		retryCount;
 		let cancelled = false;
-		generation = { status: 'loading', attempts: 0 };
+		const startTime = performance.now();
+		generation = { status: 'loading', attempts: 0, startTime };
 
 		Board.generateGame(boardSize, usedseed * params.lvl, (progress) => {
-			if (!cancelled) generation = { status: 'loading', attempts: progress.attempts };
+			if (!cancelled) generation = { status: 'loading', attempts: progress.attempts, startTime };
 		})
 			.then((board) => {
 				if (!cancelled) generation = { status: 'ready', board, level: params.lvl };
@@ -140,7 +147,9 @@
 				</div>
 				{#if attempts > typicalGenerationAttempts}
 					<p class="mt-4 text-sm text-text">This is taking a bit longer than usual. Get ready!</p>
-					<p class="mt-2 text-xs text-text italic">Attempt {attempts}</p>
+					<p class="mt-2 text-xs text-text italic">
+						Attempt {attempts} ({Math.round(attemptsPerSecond / 100) / 10}k attempts/s)
+					</p>
 				{/if}
 			</div>
 		</main>

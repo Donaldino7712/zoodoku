@@ -206,7 +206,7 @@
 	onmousemove={handleMouseMove}
 	onmouseup={handleMouseUp}
 	class={[
-		'flex aspect-square size-full min-h-1 min-w-1 items-center',
+		'flex aspect-square size-full items-center',
 		'relative clicky justify-center rounded border-2 border-transparent',
 		colorBlind.current && groupBorders.top && 'border-t-white',
 		colorBlind.current && groupBorders.right && 'border-r-white',

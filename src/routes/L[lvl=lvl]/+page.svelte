@@ -7,7 +7,7 @@
 	import WinOverlay from './WinOverlay.svelte';
 	import { page } from '$app/state';
 	import { playSound } from '#lib/audio.ts';
-	import { animations, maxsize, seed } from '#lib/config.svelte.ts';
+	import { animations, level, maxsize, seed } from '#lib/config.svelte.ts';
 	import { fade } from 'svelte/transition';
 
 	const typicalGenerationAttempts = 5_000;
@@ -115,7 +115,7 @@
 		<WinOverlay
 			visible={generation.board.won}
 			next={params.lvl + 1}
-			customseed={page.url.searchParams.has('s')}
+			customseed={page.url.searchParams.has('s') || params.lvl > level.current}
 			{retry}
 		/>
 		<LossOverlay visible={lives <= 0} {retry} />
@@ -157,7 +157,7 @@
 	{:else}
 		<main class="mx-auto flex min-h-dvh max-w-2xl items-center justify-center p-8">
 			<div class="text-center">
-				<p class="text-red-600">{generation.message}</p>
+				<p class="text-error">{generation.message}</p>
 				<button class="mt-4 underline" onclick={retry}>Try again</button>
 			</div>
 		</main>

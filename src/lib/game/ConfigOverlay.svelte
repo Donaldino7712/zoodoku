@@ -79,9 +79,7 @@
 				>
 					<span>Theme</span>
 					<span class="font-semibold">
-						{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[
-							theme.current
-						]}
+						{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[theme.current]}
 					</span>
 				</button>
 

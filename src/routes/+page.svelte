@@ -43,7 +43,12 @@
 			{/each}
 		</div>
 		<button class="mt-4 w-full py-2 underline" onclick={() => goto('/tutorial')}> Tutorial </button>
-		<button class="mt-4 w-full py-2 underline" onclick={() => (managementVisible = !managementVisible)}> Manage Progress </button>
+		<button
+			class="mt-4 w-full py-2 underline"
+			onclick={() => (managementVisible = !managementVisible)}
+		>
+			Manage Progress
+		</button>
 	{:else}
 		<p class="mt-4">Loading...</p>
 	{/if}

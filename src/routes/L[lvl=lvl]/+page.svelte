@@ -19,8 +19,8 @@
 
 	const boardSize = $derived.by(() => {
 		if (params.lvl <= 5) return params.lvl + 3;
-		const sizes = [8, 8, 8, 8, 7, 8, 6, 8, 5];
-		return sizes[(params.lvl - 6) % sizes.length];
+		if (params.lvl <= 200) return [8, 8, 8, 8, 7, 8, 6, 8, 5][(params.lvl - 6) % 9];
+		return [8, 8, 8, 12, 7, 10, 6, 12, 10, 8, 7, 8, 10, 12][params.lvl % 16];
 	});
 	type GenerationState =
 		| { status: 'loading'; attempts: number; startTime?: number }

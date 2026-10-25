@@ -1,6 +1,11 @@
 export class Board {
 	static readonly maxGenerationAttempts = 100_000;
-	static readonly generationYieldInterval = 16;
+	static readonly generationYieldIntervalMs = 32;
+	static readonly generationTimeBudgetMs = 20_000;
+	static readonly uniquenessNodeBudget = 250_000;
+	static readonly minimumRegionSize = 3;
+	static readonly maximumRegionFactor = 6;
+	static readonly unbalancedRegionThreshold = 8;
 
 	/** cells[y][x] */
 	cells = $state<Cell[][]>([]);
@@ -21,6 +26,9 @@ export class Board {
 		const random = seededRandom(seed);
 		const board = new Board();
 		board.seed = seed;
+		const startedAt = Date.now();
+		let yieldedAt = startedAt;
+		const large = size > Board.unbalancedRegionThreshold;
 
 		onProgress?.({ attempts: 0, maxAttempts: Board.maxGenerationAttempts });
 
@@ -37,11 +45,29 @@ export class Board {
 				cells[y][x].group = y;
 			}
 
-			growRegions(cells, size, random);
-			if (!hasUniqueSolution(cells)) {
+			let acceptable = true;
+			let nodeBudget = Infinity;
+			if (large) {
+				// this new algo uses two big regions + small "anchor" regions,
+				// this makes unique solutions much more likely
+				const regionSizes = growUnbalancedRegions(cells, size, random);
+				acceptable = Math.max(...regionSizes) <= Board.maximumRegionFactor * size;
+				nodeBudget = Board.uniquenessNodeBudget;
+			} else {
+				growRegions(cells, size, random);
+			}
+
+			if (!acceptable || !hasUniqueSolution(cells, nodeBudget)) {
 				const attempts = attempt + 1;
 				onProgress?.({ attempts, maxAttempts: Board.maxGenerationAttempts });
-				if (attempts % Board.generationYieldInterval === 0) await yieldToBrowser();
+
+				const now = Date.now();
+				if (now - startedAt > Board.generationTimeBudgetMs)
+					throw new Error('unable to generate an easily solvable Zoodoku board');
+				if (now - yieldedAt >= Board.generationYieldIntervalMs) {
+					yieldedAt = now;
+					await yieldToBrowser();
+				}
 				continue;
 			}
 
@@ -140,7 +166,7 @@ export class Board {
 	}
 }
 
-const GROUP_HUE_SLOTS = [0, 45, 90, 135, 180, 225, 270, 315];
+const GROUP_HUE_SLOTS = [0, 25, 45, 90, 110, 135, 180, 225, 240, 270, 315, 330];
 
 export interface GenerationProgress {
 	attempts: number;
@@ -151,14 +177,89 @@ function yieldToBrowser(): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
-function hasUniqueSolution(cells: Cell[][]): boolean {
+function hasUniqueSolution(cells: Cell[][], maxNodes = Infinity): boolean {
+	return cells.length <= 30
+		? hasUniqueSolutionBitmask(cells, maxNodes)
+		: hasUniqueSolutionSets(cells, maxNodes);
+}
+
+function hasUniqueSolutionBitmask(cells: Cell[][], maxNodes: number): boolean {
+	const size = cells.length;
+	const fullColumns = (1 << size) - 1;
+	const fullGroups = (1 << size) - 1;
+	const groupAt = cells.map((row) => row.map((cell) => cell.group));
+	const rowGroupMasks = groupAt.map((row) => row.reduce((mask, group) => mask | (1 << group), 0));
+	const suffixGroupUnion = new Int32Array(size + 1);
+	for (let row = size - 1; row >= 0; row -= 1)
+		suffixGroupUnion[row] = suffixGroupUnion[row + 1] | rowGroupMasks[row];
+
+	const placement = new Int16Array(size);
+	let usedColumns = 0;
+	let usedGroups = 0;
+	let solutions = 0;
+	let nodes = 0;
+	let exhausted = false;
+
+	function search(row: number): boolean {
+		if (nodes >= maxNodes) {
+			exhausted = true;
+			return false;
+		}
+		if (row === size) {
+			solutions += 1;
+			return solutions < 2;
+		}
+
+		const unusedGroups = fullGroups & ~usedGroups;
+		if ((unusedGroups & ~suffixGroupUnion[row]) !== 0) return true;
+
+		let available = fullColumns & ~usedColumns;
+		if (row > 0) {
+			const previous = placement[row - 1];
+			available &= ~(1 << previous);
+			if (previous > 0) available &= ~(1 << (previous - 1));
+			if (previous < size - 1) available &= ~(1 << (previous + 1));
+		}
+
+		while (available !== 0) {
+			const bit = available & -available;
+			available ^= bit;
+			const column = 31 - Math.clz32(bit);
+			const group = groupAt[row][column];
+			const groupBit = 1 << group;
+			if ((usedGroups & groupBit) !== 0) continue;
+
+			nodes += 1;
+			usedColumns |= bit;
+			usedGroups |= groupBit;
+			placement[row] = column;
+			const keepGoing = search(row + 1);
+			usedColumns ^= bit;
+			usedGroups ^= groupBit;
+			if (!keepGoing) return false;
+		}
+
+		return true;
+	}
+
+	search(0);
+	return solutions === 1 && !exhausted;
+}
+
+function hasUniqueSolutionSets(cells: Cell[][], maxNodes: number): boolean {
 	const size = cells.length;
 	const usedColumns = new Set<number>();
 	const usedGroups = new Set<number>();
 	const placement: number[] = [];
 	let solutions = 0;
+	let nodes = 0;
+	let exhausted = false;
 
 	function search(row: number): boolean {
+		if (nodes >= maxNodes) {
+			exhausted = true;
+			return false;
+		}
 		if (row === size) {
 			solutions += 1;
 			return solutions < 2;
@@ -174,10 +275,11 @@ function hasUniqueSolution(cells: Cell[][]): boolean {
 				continue;
 			}
 
+			nodes += 1;
 			usedColumns.add(column);
 			usedGroups.add(group);
 			placement[row] = column;
-			if (!search(row + 1) && solutions > 1) return false;
+			if (!search(row + 1) && (solutions > 1 || exhausted)) return false;
 			usedColumns.delete(column);
 			usedGroups.delete(group);
 		}
@@ -186,7 +288,7 @@ function hasUniqueSolution(cells: Cell[][]): boolean {
 	}
 
 	search(0);
-	return solutions === 1;
+	return solutions === 1 && !exhausted;
 }
 
 export interface Cell {
@@ -262,6 +364,141 @@ function growRegions(cells: Cell[][], size: number, random: () => number): void 
 			if (unassigned.has(nextIndex)) frontiers[group].add(nextIndex);
 		}
 	}
+}
+
+function growUnbalancedRegions(cells: Cell[][], size: number, random: () => number): number[] {
+	const total = size * size;
+	const minSize = Math.min(Board.minimumRegionSize, Math.floor(total / size));
+	const targets = planRegionTargets(size, total, minSize, random);
+
+	const frontiers = cells.map(() => new Set<number>());
+	const unassigned = new Set<number>();
+	const counts = new Array<number>(size).fill(0);
+
+	for (let y = 0; y < size; y += 1) {
+		for (let x = 0; x < size; x += 1) {
+			const index = y * size + x;
+			if (cells[y][x].group === -1) unassigned.add(index);
+		}
+	}
+
+	for (let group = 0; group < size; group += 1) {
+		const animalColumn = cells[group].findIndex((cell) => cell.animal);
+		counts[group] = 1;
+		for (const [x, y] of neighbors(animalColumn, group, size)) {
+			const index = y * size + x;
+			if (unassigned.has(index)) frontiers[group].add(index);
+		}
+	}
+
+	function claim(group: number, index: number): void {
+		const y = Math.floor(index / size);
+		const x = index % size;
+		cells[y][x].group = group;
+		unassigned.delete(index);
+		frontiers[group].delete(index);
+		for (const [nextX, nextY] of neighbors(x, y, size)) {
+			const nextIndex = nextY * size + nextX;
+			if (unassigned.has(nextIndex)) frontiers[group].add(nextIndex);
+		}
+		counts[group] += 1;
+	}
+
+	function pickCompact(group: number, candidates: number[]): number {
+		let best = candidates[0];
+		let bestScore = -Infinity;
+		for (const index of candidates) {
+			const y = Math.floor(index / size);
+			const x = index % size;
+			let sameGroup = 0;
+			for (const [nextX, nextY] of neighbors(x, y, size))
+				if (cells[nextY][nextX].group === group) sameGroup += 1;
+			const score = sameGroup + random() * 0.6;
+			if (score > bestScore) {
+				bestScore = score;
+				best = index;
+			}
+		}
+		return best;
+	}
+
+	// without this the large regions can surround a seed of the small regions
+	for (let round = 1; round < minSize; round += 1) {
+		const order = Array.from({ length: size }, (_, group) => group);
+		shuffle(order, random);
+		for (const group of order) {
+			if (counts[group] >= minSize) continue;
+			const candidates = [...frontiers[group]].filter((index) => unassigned.has(index));
+			if (candidates.length === 0) continue;
+			claim(group, pickCompact(group, candidates));
+		}
+	}
+
+	// grow towards the targets
+	const needs = targets.map((target, group) => target - counts[group]);
+	while (unassigned.size > 0) {
+		let bestGroup = -1;
+		let bestNeed = -Infinity;
+
+		for (let group = 0; group < size; group += 1) {
+			if (needs[group] > bestNeed) {
+				bestNeed = needs[group];
+				bestGroup = group;
+			}
+		}
+
+		if (bestGroup === -1) throw new Error('unable to grow Zoodoku regions');
+		const candidates = [...frontiers[bestGroup]].filter((index) => unassigned.has(index));
+		if (candidates.length === 0) {
+			needs[bestGroup] = -Infinity;
+			continue;
+		}
+
+		claim(bestGroup, pickCompact(bestGroup, candidates));
+		needs[bestGroup] = targets[bestGroup] - counts[bestGroup];
+	}
+
+	return counts;
+}
+
+function planRegionTargets(
+	size: number,
+	total: number,
+	minSize: number,
+	random: () => number
+): number[] {
+	const targets = new Array<number>(size).fill(minSize);
+	const order = Array.from({ length: size }, (_, group) => group);
+	shuffle(order, random);
+
+	let claimed = 0;
+	for (let index = 0; index < 2; index += 1) {
+		const share = 0.28 + random() * 0.2;
+		targets[order[index]] = Math.max(minSize, Math.round(share * total));
+		claimed += targets[order[index]];
+	}
+
+	const maxLarge = total - (size - 2) * minSize;
+	if (claimed > maxLarge) {
+		const scale = maxLarge / claimed;
+		claimed = 0;
+		for (let index = 0; index < 2; index += 1) {
+			const group = order[index];
+			targets[group] = Math.max(minSize, Math.floor(targets[group] * scale));
+			claimed += targets[group];
+		}
+	}
+
+	const rest = order.slice(2);
+	let remaining = total - claimed;
+	const base = Math.floor(remaining / rest.length);
+	let extra = remaining - base * rest.length;
+	for (const group of rest) {
+		targets[group] = base + (extra > 0 ? 1 : 0);
+		if (extra > 0) extra -= 1;
+	}
+
+	return targets;
 }
 
 function chooseGroupHues(cells: Cell[][], groupCount: number, random: () => number): number[] {

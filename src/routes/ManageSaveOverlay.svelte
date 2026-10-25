@@ -1,16 +1,17 @@
 <script lang="ts">
 	import { animations, exportSave, resetSave } from '#lib/config.svelte.ts';
+	import { page } from '$app/state';
 	import { fade } from 'svelte/transition';
 
 	let { managementVisible = $bindable() }: { managementVisible: boolean } = $props();
 	let resetClicked = $state(false);
 	let exportClicked = $state(false);
-	let timeout = $state(-1);
+	let timeout = $state<ReturnType<typeof setTimeout>>();
 
 	function onexport() {
-		navigator.clipboard.writeText(`https://${window.location.hostname}/import?d=${exportSave()}`);
+		navigator.clipboard.writeText(`${page.url.origin}/import?d=${exportSave()}`);
 		exportClicked = true;
-		if (timeout !== -1) clearTimeout(timeout);
+		if (timeout) clearTimeout(timeout);
 		timeout = setTimeout(() => (exportClicked = false), 1.5e3);
 	}
 
@@ -25,7 +26,7 @@
 		class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
 		transition:fade={{ duration: animations.current ? 200 : 0 }}
 	>
-		<div class="flex min-w-2xs flex-col gap-3 rounded-3xl bg-bg p-4">
+		<div class="flex min-w-2xs flex-col rounded-3xl bg-bg p-4">
 			<div class="flex w-full items-center justify-center">
 				<p class="absolute left-1/2 -translate-x-1/2 font-semibold">Manage progress</p>
 				<button
@@ -40,13 +41,13 @@
 
 			<div class="flex flex-col">
 				<button
-					class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-center"
+					class="mt-4 clicky rounded-lg border border-depress bg-layer p-3 text-center"
 					onclick={onexport}
 				>
 					{exportClicked ? 'Copied!' : 'Export'}
 				</button>
 				<button
-					class="mt-4 flex clicky items-center justify-between rounded-lg border border-error bg-error p-3 text-center text-bg"
+					class="mt-4 clicky rounded-lg border border-error bg-error p-3 text-center text-bg"
 					onclick={onreset}
 				>
 					{resetClicked ? 'Are you sure?' : 'Reset progress'}

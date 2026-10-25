@@ -166,8 +166,6 @@ export class Board {
 	}
 }
 
-const GROUP_HUE_SLOTS = [0, 25, 45, 90, 110, 135, 180, 225, 240, 270, 315, 330];
-
 export interface GenerationProgress {
 	attempts: number;
 	maxAttempts: number;
@@ -503,35 +501,58 @@ function planRegionTargets(
 
 function chooseGroupHues(cells: Cell[][], groupCount: number, random: () => number): number[] {
 	const adjacency = buildGroupAdjacency(cells, groupCount);
-	const hueSlots = GROUP_HUE_SLOTS.slice(0, groupCount);
-	const hues = new Array<number>(groupCount);
-	const usedSlots = new Set<number>();
+	const firstHue = random() * 360;
+	const groupHues = Array.from({ length: 4 }, (_, color) => (firstHue + color * (360 / 4)) % 360);
+	const colors = new Array<number>(groupCount).fill(-1);
 
-	const groups = Array.from({ length: groupCount }, (_, group) => group).sort(
-		(a, b) => adjacency[b].size - adjacency[a].size || a - b
-	);
+	function colorGroup(): boolean {
+		const group = findMostConstrainedGroup(adjacency, colors);
+		if (group === -1) return true;
 
-	for (const group of groups) {
-		const availableSlots = hueSlots.map((_, slot) => slot).filter((slot) => !usedSlots.has(slot));
+		const usedColors = new Set(
+			[...adjacency[group]].map((neighbor) => colors[neighbor]).filter((color) => color !== -1)
+		);
+		const availableColors = Array.from({ length: groupHues.length }, (_, color) => color).filter(
+			(color) => !usedColors.has(color)
+		);
+		shuffle(availableColors, random);
 
-		let bestSlot = availableSlots[0];
-		let bestScore = -Infinity;
-
-		for (const slot of availableSlots) {
-			const score = hueScore(slot, group, adjacency, hues, hueSlots);
-			if (score > bestScore) {
-				bestScore = score;
-				bestSlot = slot;
-			}
+		for (const color of availableColors) {
+			colors[group] = color;
+			if (colorGroup()) return true;
 		}
 
-		if (usedSlots.size === 0) bestSlot = randomInt(availableSlots.length, random);
-
-		usedSlots.add(bestSlot);
-		hues[group] = hueSlots[bestSlot];
+		colors[group] = -1;
+		return false;
 	}
 
-	return hues;
+	if (!colorGroup()) throw new Error('unable to color regions with four colors');
+	return colors.map((color) => groupHues[color]);
+}
+
+function findMostConstrainedGroup(adjacency: Set<number>[], colors: number[]): number {
+	let bestGroup = -1;
+	let bestSaturation = -1;
+	let bestDegree = -1;
+
+	for (let group = 0; group < colors.length; group += 1) {
+		if (colors[group] !== -1) continue;
+
+		const neighborColors = new Set(
+			[...adjacency[group]].map((neighbor) => colors[neighbor]).filter((color) => color !== -1)
+		);
+		const saturation = neighborColors.size;
+		if (
+			saturation > bestSaturation ||
+			(saturation === bestSaturation && adjacency[group].size > bestDegree)
+		) {
+			bestGroup = group;
+			bestSaturation = saturation;
+			bestDegree = adjacency[group].size;
+		}
+	}
+
+	return bestGroup;
 }
 
 function buildGroupAdjacency(cells: Cell[][], groupCount: number): Set<number>[] {
@@ -552,30 +573,6 @@ function addGroupEdge(adjacency: Set<number>[], first: number, second: number): 
 	if (first === second) return;
 	adjacency[first].add(second);
 	adjacency[second].add(first);
-}
-
-function hueScore(
-	slot: number,
-	group: number,
-	adjacency: Set<number>[],
-	hues: number[],
-	hueSlots: number[]
-): number {
-	const neighborHues = [...adjacency[group]]
-		.filter((neighbor) => hues[neighbor] !== undefined)
-		.map((neighbor) => hues[neighbor]);
-
-	if (neighborHues.length === 0) return 0;
-
-	const distances = neighborHues.map((hue) => hueDistance(hueSlots[slot], hue));
-	const minimumDistance = Math.min(...distances);
-	const totalDistance = distances.reduce((sum, distance) => sum + distance, 0);
-	return minimumDistance * 1000 + totalDistance;
-}
-
-function hueDistance(first: number, second: number): number {
-	const difference = Math.abs(first - second) % 360;
-	return Math.min(difference, 360 - difference);
 }
 
 function neighbors(x: number, y: number, size: number): Array<[number, number]> {

@@ -22,7 +22,7 @@ const dailyResultSchema = v.optional(
 	})
 );
 
-const progressSchema = v.object({
+const saveSchema = v.object({
 	zoodoku: v.pipe(v.number(), v.literal(1)),
 	vibrate: v.boolean(),
 	audio: v.boolean(),
@@ -39,13 +39,13 @@ export type DailyResult = v.InferInput<typeof dailyResultSchema>;
 
 export const dailyResult = new PersistedState<DailyResult>('zoodoku-daily-results', undefined);
 
-export function validateProgress(progress: Object) {
-	return v.safeParse(progressSchema, progress).success;
+export function validateSave(save: Object) {
+	return v.safeParse(saveSchema, save).success;
 }
 
-export function importProgress(progress: string) {
-	const decoded = JSON.parse(atob(progress));
-	if (!validateProgress(decoded)) return;
+export function importSave(save: string) {
+	const decoded = JSON.parse(atob(save));
+	if (!validateSave(decoded)) return;
 	vibrate.current = decoded.vibrate;
 	audio.current = decoded.audio;
 	barebones.current = decoded.barebones;
@@ -57,7 +57,7 @@ export function importProgress(progress: string) {
 	dailyResult.current = decoded.daily;
 }
 
-export function exportProgress(): string {
+export function exportSave(): string {
 	return btoa(
 		JSON.stringify({
 			zoodoku: 1,
@@ -74,7 +74,7 @@ export function exportProgress(): string {
 	);
 }
 
-export function resetProgress() {
+export function resetSave() {
 	vibrate.current = true;
 	audio.current = true;
 	barebones.current = false;

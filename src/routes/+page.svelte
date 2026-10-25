@@ -3,14 +3,14 @@
 	import { loadDailyResult } from '#lib/daily.ts';
 	import { browser } from '$app/env';
 	import { goto } from '$app/navigation';
-	import ManageProgressOverlay from './ManageProgressOverlay.svelte';
+	import ManageSaveOverlay from './ManageSaveOverlay.svelte';
 
 	let daily = $derived(loadDailyResult());
 	let lastDaily = $derived(dailyResult.current);
 	let managementVisible = $state(false);
 </script>
 
-<ManageProgressOverlay bind:managementVisible />
+<ManageSaveOverlay bind:managementVisible />
 
 <main class="mt-1/3 mx-auto flex min-h-dvh max-w-lg flex-col items-center p-8">
 	<img src="/icons/icon.svg" alt="logo" class="size-2/3" />

@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { importProgress, validateProgress } from '#lib/config.svelte.ts';
+	import { importSave, validateSave } from '#lib/config.svelte.ts';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 
 	if (!page.url.searchParams.has('d')) goto('/');
 
 	let progress = page.url.searchParams.get('d')!;
-	let isValid = validateProgress(progress);
+	let isValid = validateSave(progress);
 
 	function onimport() {
-		importProgress(progress);
+		importSave(progress);
 		goto('/', { replace: true });
 	}
 </script>

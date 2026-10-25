@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { animations, exportProgress, resetProgress } from '#lib/config.svelte.ts';
+	import { animations, exportSave, resetSave } from '#lib/config.svelte.ts';
 	import { fade } from 'svelte/transition';
 
 	let { managementVisible = $bindable() }: { managementVisible: boolean } = $props();
@@ -9,7 +9,7 @@
 
 	function onexport() {
 		navigator.clipboard.writeText(
-			`https://${window.location.hostname}/import?d=${exportProgress()}`
+			`https://${window.location.hostname}/import?d=${exportSave()}`
 		);
 		exportClicked = true;
 		if (timeout !== -1) clearTimeout(timeout);
@@ -18,7 +18,7 @@
 
 	function onreset() {
 		resetClicked = !resetClicked;
-		if (!resetClicked) resetProgress();
+		if (!resetClicked) resetSave();
 	}
 </script>
 

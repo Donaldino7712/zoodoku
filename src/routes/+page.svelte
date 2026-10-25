@@ -1,9 +1,9 @@
 <script>
 	import { dailyResult, level } from '#lib/config.svelte.ts';
 	import { loadDailyResult } from '#lib/daily.ts';
-	import ManageProgressOverlay from '#lib/game/ManageProgressOverlay.svelte';
 	import { browser } from '$app/env';
 	import { goto } from '$app/navigation';
+	import ManageProgressOverlay from './ManageProgressOverlay.svelte';
 
 	let daily = $derived(loadDailyResult());
 	let lastDaily = $derived(dailyResult.current);

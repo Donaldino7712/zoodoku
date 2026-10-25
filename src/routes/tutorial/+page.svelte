@@ -93,7 +93,7 @@
 
 {#if board.won}
 	<div
-		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+		class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
 		in:fade={{ delay: animations.current ? 800 : 0, duration: animations.current ? 400 : 0 }}
 	>
 		<div

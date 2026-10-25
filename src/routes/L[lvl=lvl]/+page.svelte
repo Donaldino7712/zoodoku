@@ -83,7 +83,7 @@
 	{#if generation.status === 'ready' && generation.level === params.lvl}
 		{#if providedstatehash}
 			<div
-				class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+				class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
 				transition:fade={{ duration: animations.current ? 400 : 0 }}
 			>
 				<div class="mx-4 min-w-2xs rounded-3xl bg-bg p-4">

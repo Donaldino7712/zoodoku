@@ -41,7 +41,7 @@
 
 {#if p.visible}
 	<div
-		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+		class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
 		in:fade={{ duration: animations.current ? 400 : 0 }}
 	>
 		<div

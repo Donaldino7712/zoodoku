@@ -43,8 +43,8 @@
 </script>
 
 <main class="mx-auto grid max-h-dvh min-h-dvh max-w-2xl grid-rows-[auto_auto_1fr]">
-	<div class="grid grid-cols-[auto_1fr_auto] p-8">
-		<div class="flex items-start">
+	<div class="flex justify-center p-8">
+		<div class="absolute top-4 left-4">
 			{#if !backIsHome}
 				<button class="clicky rounded bg-layer p-2 drop-shadow" onclick={() => history.back()}>
 					<ChevronLeft />
@@ -65,7 +65,7 @@
 				<p class="mx-auto mt-3 max-w-sm text-center text-sm">{instructions}</p>
 			{/if}
 		</div>
-		<div class="flex items-start">
+		<div class="absolute top-4 right-4">
 			<ConfigOverlay {shareText} />
 		</div>
 	</div>

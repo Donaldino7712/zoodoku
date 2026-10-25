@@ -7,20 +7,21 @@
 	import WinOverlay from './WinOverlay.svelte';
 	import { page } from '$app/state';
 	import { playSound } from '#lib/audio.ts';
-	import { animations, seed } from '#lib/config.svelte.ts';
-	import { fade, scale } from 'svelte/transition';
+	import { animations, maxsize, seed } from '#lib/config.svelte.ts';
+	import { fade } from 'svelte/transition';
 
 	const typicalGenerationAttempts = 5_000;
 
 	let { params }: PageProps = $props();
 
 	let usedseed = $state(parseInt(page.url.searchParams.get('s')!) || seed.current);
+	let usedmaxsize = $state(parseInt(page.url.searchParams.get('m')!) || maxsize.current);
 	let providedstatehash = $state(page.url.searchParams.get('h'));
 
 	const boardSize = $derived.by(() => {
 		if (params.lvl <= 5) return params.lvl + 3;
-		if (params.lvl <= 200) return [8, 8, 8, 8, 7, 8, 6, 8, 5][(params.lvl - 6) % 9];
-		return [8, 8, 8, 12, 7, 10, 6, 12, 10, 8, 7, 8, 10, 12][params.lvl % 14];
+		const size = [8, 8, 10, 8, 7, 8, 6, 8, 5, 8, 12, 12, 10, 7, 8, 6, 8, 5][(params.lvl - 6) % 18];
+		return Math.min(usedmaxsize, size);
 	});
 	type GenerationState =
 		| { status: 'loading'; attempts: number; startTime?: number }

@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { animations, audio, barebones, colorBlind, theme, vibrate } from '#lib/config.svelte.ts';
+	import {
+		animations,
+		audio,
+		barebones,
+		colorBlind,
+		maxsize,
+		theme,
+		vibrate
+	} from '#lib/config.svelte.ts';
 	import { Cog } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
@@ -69,6 +77,16 @@
 				>
 					<span>Animations</span>
 					<span class="font-semibold">{animations.current ? 'On' : 'Off'}</span>
+				</button>
+				<button
+					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
+					onclick={() => {
+						maxsize.current = maxsize.current + 2;
+						if (maxsize.current > 12) maxsize.current = 8;
+					}}
+				>
+					<span>Max Size</span>
+					<span class="font-semibold">{maxsize.current}x{maxsize.current}</span>
 				</button>
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"

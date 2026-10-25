@@ -18,7 +18,7 @@
 
 {#if visible}
 	<div
-		class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+		class="fixed inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm"
 		transition:fade={{ duration: animations.current ? 200 : 0 }}
 	>
 		<div class="flex min-w-2xs flex-col gap-3 rounded-3xl bg-bg p-4">
@@ -78,11 +78,9 @@
 					}}
 				>
 					<span>Theme</span>
-					<span class="font-semibold"
-						>{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[
-							theme.current
-						]}</span
-					>
+					<span class="font-semibold">
+						{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[theme.current]}
+					</span>
 				</button>
 
 				{#if shareText && navigator.canShare?.({ text: shareText })}

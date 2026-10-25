@@ -28,7 +28,8 @@ export function dailySeed(date = new Date()): number {
 }
 
 export function loadDailyResult(date = new Date()): DailyResult | undefined {
-	return dailyResult.current?.date === dateKey(date) ? dailyResult.current : undefined;
+	const saved = dailyResult.current;
+	return saved?.date === dateKey(date) ? saved : undefined;
 }
 
 export function saveDailyResult(

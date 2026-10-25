@@ -4,10 +4,10 @@ import * as v from 'valibot';
 const themeSchema = v.union([v.literal('light'), v.literal('dark'), v.literal('dark-ctp')]);
 type Theme = v.InferInput<typeof themeSchema>;
 
-const dailyResultSchema = v.optional(
+const dailyResultSchema = v.nullable(
 	v.object({
 		date: v.pipe(v.string(), v.isoDate(), v.minValue('2026-01-01')),
-		result: v.union([v.literal('win'), v.literal('lose')]),
+		result: v.union([v.literal('win'), v.literal('loss')]),
 		seconds: v.pipe(v.number(), v.gtValue(0)),
 		streak: v.pipe(v.number(), v.gtValue(0))
 	})
@@ -35,7 +35,7 @@ export const animations = new PersistedState('zoodoku-animations', true);
 export const theme = new PersistedState<Theme>('zoodoku-theme', 'light');
 export const seed = new PersistedState('zoodoku-seed', Math.floor(Math.random() * 1e8));
 export const level = new PersistedState('zoodoku-level', 1);
-export const dailyResult = new PersistedState<DailyResult>('zoodoku-daily-results', undefined);
+export const dailyResult = new PersistedState<DailyResult>('zoodoku-daily-results', null);
 
 function decodeSave(save: string) {
 	// JSON.parse might throw an error if the decoded string isn't valid JSON
@@ -62,7 +62,7 @@ export function importSave(save: string) {
 	theme.current = decoded.theme;
 	seed.current = decoded.seed;
 	level.current = decoded.level;
-	dailyResult.current = decoded.daily;
+	dailyResult.current = decoded.daily ?? null;
 }
 
 export function exportSave(): string {
@@ -77,7 +77,7 @@ export function exportSave(): string {
 			theme: theme.current,
 			seed: seed.current,
 			level: level.current,
-			daily: dailyResult.current
+			daily: dailyResult.current ?? null
 		})
 	);
 }
@@ -91,5 +91,5 @@ export function resetSave() {
 	theme.current = 'light';
 	seed.current = Math.floor(Math.random() * 100000000);
 	level.current = 1;
-	dailyResult.current = undefined;
+	dailyResult.current = null;
 }

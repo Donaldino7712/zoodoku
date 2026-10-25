@@ -17,7 +17,9 @@
 
 	function onreset() {
 		resetClicked = !resetClicked;
-		if (!resetClicked) resetSave();
+		if (resetClicked) return;
+		resetSave();
+		managementVisible = false;
 	}
 </script>
 

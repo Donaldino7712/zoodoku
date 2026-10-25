@@ -33,7 +33,7 @@ export const audio = new PersistedState('zoodoku-audio', true);
 export const barebones = new PersistedState('zoodoku-barebones', false);
 export const colorBlind = new PersistedState('zoodoku-color-blind', false);
 export const animations = new PersistedState('zoodoku-animations', true);
-export const maxsize = new PersistedState('zoodoku-maxsize', 10);
+export const maxsize = new PersistedState('zoodoku-maxsize', 8);
 export const theme = new PersistedState<Theme>('zoodoku-theme', 'light');
 export const seed = new PersistedState('zoodoku-seed', Math.floor(Math.random() * 1e8));
 export const level = new PersistedState('zoodoku-level', 1);
@@ -92,7 +92,7 @@ export function resetSave() {
 	barebones.current = false;
 	colorBlind.current = false;
 	animations.current = true;
-	maxsize.current = 10;
+	maxsize.current = 8;
 	theme.current = 'light';
 	seed.current = Math.floor(Math.random() * 100000000);
 	level.current = 1;

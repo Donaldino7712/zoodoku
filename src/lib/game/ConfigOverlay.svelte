@@ -78,7 +78,7 @@
 					<span>Animations</span>
 					<span class="font-semibold">{animations.current ? 'On' : 'Off'}</span>
 				</button>
-				<button
+				<!-- <button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
 					onclick={() => {
 						maxsize.current = maxsize.current + 2;
@@ -87,7 +87,7 @@
 				>
 					<span>Max Size</span>
 					<span class="font-semibold">{maxsize.current}x{maxsize.current}</span>
-				</button>
+				</button> -->
 				<button
 					class="flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
 					onclick={() => {

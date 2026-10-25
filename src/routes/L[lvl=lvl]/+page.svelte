@@ -15,7 +15,7 @@
 	let { params }: PageProps = $props();
 
 	let usedseed = $state(parseInt(page.url.searchParams.get('s')!) || seed.current);
-	let usedmaxsize = $state(parseInt(page.url.searchParams.get('m')!) || maxsize.current);
+	let usedmaxsize = $state(parseInt(page.url.searchParams.get('m')!) || 8);
 	let providedstatehash = $state(page.url.searchParams.get('h'));
 
 	const boardSize = $derived.by(() => {
@@ -127,7 +127,7 @@
 			title={`Level ${params.lvl}`}
 			animal={getAnimal(params.lvl)}
 			onerror={() => (playSound('lose'), lives--)}
-			shareText={`Try solving my level ${params.lvl} of Zoodoku! ${page.url.origin}/L${params.lvl}?s=${usedseed}&h=${generation.board.statehash}&m=${usedmaxsize}`}
+			shareText={`Try solving my level ${params.lvl} of Zoodoku! ${page.url.origin}/L${params.lvl}?s=${usedseed}&h=${generation.board.statehash}`}
 			backIsHome={page.url.searchParams.has('s')}
 		/>
 	{:else if generation.status === 'loading' || generation.status === 'ready'}

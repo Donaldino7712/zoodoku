@@ -140,6 +140,7 @@
 				</div>
 				{#if attempts > typicalGenerationAttempts}
 					<p class="mt-4 text-sm text-text">This is taking a bit longer than usual. Get ready!</p>
+					<p class="mt-2 text-xs text-text italic">Attempt {attempts}</p>
 				{/if}
 			</div>
 		</main>

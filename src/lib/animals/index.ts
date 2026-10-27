@@ -11,14 +11,13 @@ import owl from './owl.svg';
 import chicken from './chicken.svg';
 import robot from './robot.svg';
 import mouse from './mouse.svg';
-const eggs = import.meta.glob('./egg_*.{svg,png}', { eager: true });
+const eggs = import.meta.glob<string>('./egg_*.{svg,png}', { eager: true, import: 'default' });
 
 const images = [cat, dog, frog, panda, bear, rabbit, koala, lion, owl, chicken, robot, mouse];
 const easterEggs: Record<number, string> = {
 	18: celebration
 };
-// @ts-expect-error ???
-for (const path in eggs) easterEggs[parseInt(path.match(/egg_(\d+)/)[1])] = eggs[path].default;
+for (const path in eggs) easterEggs[parseInt(path.match(/egg_(\d+)/)![1])] = eggs[path];
 for (let i = 100; i < 10_0000; i += 100) easterEggs[i] = celebration;
 
 export function getAnimal(n: number) {

@@ -75,7 +75,7 @@
 	</div>
 
 	{#if powerups}
-		<div class="flex items-center justify-center gap-4">
+		<div class="flex items-center justify-center gap-4 py-4">
 			<PowerUp apply={() => board.applyRulesAsChecks()} cooldown={10} icon={Grid2X2Check} />
 			<PowerUp apply={discoverAnimal} cooldown={30} icon={Search} />
 			<PowerUp apply={() => board.crossRandomCells(5)} cooldown={30} icon={Dices} />

@@ -8,14 +8,23 @@
 		theme,
 		vibrate
 	} from '#lib/config.svelte.ts';
-	import { Cog } from '@lucide/svelte';
+	import { Check, Cog, Copy, Share } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
 	let { shareText }: { shareText?: string } = $props();
 	let visible = $state(false);
+	let timeout = $state<ReturnType<typeof setTimeout>>();
+	let copyClicked = $state(false);
 
 	function toggle(setting: { current: boolean }): void {
 		setting.current = !setting.current;
+	}
+
+	function oncopy() {
+		navigator.clipboard.writeText(shareText!);
+		copyClicked = true;
+		if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(() => (copyClicked = false), 1.5e3);
 	}
 </script>
 
@@ -100,23 +109,31 @@
 						{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[theme.current]}
 					</span>
 				</button>
-
-				{#if shareText && navigator.canShare?.({ text: shareText })}
-					<button
-						class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => navigator.share({ text: shareText })}
-					>
-						Share this level
-					</button>
-				{:else if shareText}
-					<button
-						class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => navigator.clipboard.writeText(shareText)}
-					>
-						Copy share text
-					</button>
-				{/if}
 			</div>
+			{#if shareText}
+				<div class="mt-4 flex flex-row justify-center gap-3">
+					{#if navigator.canShare?.({ text: shareText })}
+						<button
+							class="clicky rounded border border-depress bg-layer p-3 drop-shadow"
+							onclick={() => navigator.share({ text: shareText })}
+						>
+							<Share />
+							<span class="sr-only">Share</span>
+						</button>
+					{/if}
+					<button
+						class="clicky rounded border border-depress bg-layer p-3 drop-shadow"
+						onclick={oncopy}
+					>
+						{#if copyClicked}
+							<Check />
+						{:else}
+							<Copy />
+						{/if}
+						<span class="sr-only">Copy</span>
+					</button>
+				</div>
+			{/if}
 		</div>
 	</div>
 {/if}

@@ -8,14 +8,23 @@
 		theme,
 		vibrate
 	} from '#lib/config.svelte.ts';
-	import { Cog, Copy, Share } from '@lucide/svelte';
+	import { Check, Cog, Copy, Share } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
 	let { shareText }: { shareText?: string } = $props();
 	let visible = $state(false);
+	let timeout = $state<ReturnType<typeof setTimeout>>();
+	let copyClicked = $state(false);
 
 	function toggle(setting: { current: boolean }): void {
 		setting.current = !setting.current;
+	}
+
+	function oncopy() {
+		navigator.clipboard.writeText(shareText!);
+		copyClicked = true;
+		if (timeout) clearTimeout(timeout);
+		timeout = setTimeout(() => (copyClicked = false), 1.5e3);
 	}
 </script>
 
@@ -114,9 +123,13 @@
 					{/if}
 					<button
 						class="clicky rounded border border-depress bg-layer p-3 drop-shadow"
-						onclick={() => navigator.clipboard.writeText(shareText)}
+						onclick={oncopy}
 					>
-						<Copy />
+						{#if copyClicked}
+							<Check />
+						{:else}
+							<Copy />
+						{/if}
 						<span class="sr-only">Copy</span>
 					</button>
 				</div>

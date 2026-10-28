@@ -8,7 +8,7 @@
 		theme,
 		vibrate
 	} from '#lib/config.svelte.ts';
-	import { Cog } from '@lucide/svelte';
+	import { Cog, Copy, Share } from '@lucide/svelte';
 	import { fade } from 'svelte/transition';
 
 	let { shareText }: { shareText?: string } = $props();
@@ -100,23 +100,21 @@
 						{({ dark: 'Dark', light: 'Light', 'dark-ctp': 'Catppuccin' } as const)[theme.current]}
 					</span>
 				</button>
-
-				{#if shareText && navigator.canShare?.({ text: shareText })}
-					<button
-						class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => navigator.share({ text: shareText })}
-					>
-						Share this level
-					</button>
-				{:else if shareText}
-					<button
-						class="mt-4 flex clicky items-center justify-between rounded-lg border border-depress bg-layer p-3 text-left"
-						onclick={() => navigator.clipboard.writeText(shareText)}
-					>
-						Copy share text
-					</button>
-				{/if}
 			</div>
+    		<div class="flex mt-4 flex-row justify-center gap-3">
+        		{#if shareText && navigator.canShare?.({ text: shareText })}
+    				<button class="clicky rounded bg-layer p-3 drop-shadow" onclick={() => navigator.share({ text: shareText })}>
+       					<Share />
+       					<span class="sr-only">Share</span>
+    				</button>
+                {/if}
+        		{#if shareText}
+    				<button class="clicky rounded bg-layer p-3 drop-shadow" onclick={() => navigator.clipboard.writeText(shareText)}>
+       					<Copy />
+       					<span class="sr-only">Copy</span>
+    				</button>
+          		{/if}
+    		</div>
 		</div>
 	</div>
 {/if}

@@ -105,7 +105,7 @@
 				<div class="mt-4 flex flex-row justify-center gap-3">
 					{#if navigator.canShare?.({ text: shareText })}
 						<button
-							class="clicky rounded bg-layer p-3 drop-shadow"
+							class="clicky rounded border border-depress bg-layer p-3 drop-shadow"
 							onclick={() => navigator.share({ text: shareText })}
 						>
 							<Share />
@@ -113,7 +113,7 @@
 						</button>
 					{/if}
 					<button
-						class="clicky rounded bg-layer p-3 drop-shadow"
+						class="clicky rounded border border-depress bg-layer p-3 drop-shadow"
 						onclick={() => navigator.clipboard.writeText(shareText)}
 					>
 						<Copy />

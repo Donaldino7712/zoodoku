@@ -102,19 +102,25 @@
 				</button>
 			</div>
 			{#if shareText}
-    		<div class="flex mt-4 flex-row justify-center gap-3">
-        		{#if navigator.canShare?.({ text: shareText })}
-    				<button class="clicky rounded bg-layer p-3 drop-shadow" onclick={() => navigator.share({ text: shareText })}>
-       					<Share />
-       					<span class="sr-only">Share</span>
-    				</button>
-                {/if}
-				<button class="clicky rounded bg-layer p-3 drop-shadow" onclick={() => navigator.clipboard.writeText(shareText)}>
-   					<Copy />
-   					<span class="sr-only">Copy</span>
-				</button>
-    		</div>
-            {/if}
+				<div class="mt-4 flex flex-row justify-center gap-3">
+					{#if navigator.canShare?.({ text: shareText })}
+						<button
+							class="clicky rounded bg-layer p-3 drop-shadow"
+							onclick={() => navigator.share({ text: shareText })}
+						>
+							<Share />
+							<span class="sr-only">Share</span>
+						</button>
+					{/if}
+					<button
+						class="clicky rounded bg-layer p-3 drop-shadow"
+						onclick={() => navigator.clipboard.writeText(shareText)}
+					>
+						<Copy />
+						<span class="sr-only">Copy</span>
+					</button>
+				</div>
+			{/if}
 		</div>
 	</div>
 {/if}

@@ -5,6 +5,7 @@
 	let p: {
 		board: Board;
 		onerror?: () => void;
+		oninteract?: () => void;
 		animal: string;
 		highlight?: { row: number; column: number };
 	} = $props();
@@ -42,6 +43,7 @@
 					bottomLeft={i === p.board.cells.length - 1 && j === 0}
 					bottomRight={i === p.board.cells.length - 1 && j === row.length - 1}
 					onerror={p.onerror}
+					oninteract={p.oninteract}
 					animal={p.animal}
 					highlight={p.highlight?.row === i && p.highlight.column === j}
 				/>

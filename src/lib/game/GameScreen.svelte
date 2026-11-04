@@ -19,6 +19,7 @@
 		instructions,
 		highlight,
 		onerror,
+		oninteract,
 		backIsHome,
 		powerups = true
 	}: {
@@ -31,6 +32,7 @@
 		instructions?: string;
 		highlight?: { row: number; column: number };
 		onerror?: () => void;
+		oninteract?: () => void;
 		backIsHome?: boolean;
 		powerups?: boolean;
 	} = $props();
@@ -71,7 +73,7 @@
 	</div>
 
 	<div class="px-4">
-		<Zoodoku {board} {onerror} {animal} {highlight} />
+		<Zoodoku {board} {onerror} {oninteract} {animal} {highlight} />
 	</div>
 
 	{#if powerups}

@@ -23,7 +23,7 @@
 	let generation = $state<Generation>({ status: 'loading' });
 	let lives = $state(3);
 	let elapsed = $state(0);
-	let startedAt = 0;
+	let startedAt = $state(0);
 	let saved = false;
 
 	$effect(() => {
@@ -31,10 +31,7 @@
 		let cancelled = false;
 		Board.generateGame(DAILY_SIZE, todaySeed)
 			.then((board) => {
-				if (!cancelled) {
-					generation = { status: 'ready', board };
-					startedAt = Date.now();
-				}
+				if (!cancelled) generation = { status: 'ready', board };
 			})
 			.catch((error: unknown) => {
 				if (!cancelled)
@@ -47,7 +44,8 @@
 	});
 
 	$effect(() => {
-		if (generation.status !== 'ready' || saved) return;
+		if (generation.status !== 'ready' || saved || !startedAt) return;
+		elapsed = Math.floor((Date.now() - startedAt) / 1000);
 		const timer = setInterval(() => (elapsed = Math.floor((Date.now() - startedAt) / 1000)), 1000);
 		return () => clearInterval(timer);
 	});
@@ -116,9 +114,12 @@
 		board={generation.board}
 		{lives}
 		max={DAILY_SIZE}
-		title="Daily BETA"
+		title="Daily · {!startedAt ? 'start playing!' : formatDailyTime(elapsed)}"
 		animal={getAnimal(8)}
 		onerror={loseLife}
+		oninteract={() => {
+			if (!startedAt) startedAt = Date.now();
+		}}
 		{shareText}
 		backIsHome
 		powerups={false}

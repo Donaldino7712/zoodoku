@@ -23,6 +23,7 @@
 		bottomLeft = false,
 		bottomRight = false,
 		onerror,
+		oninteract,
 		animal,
 		highlight = false
 	}: {
@@ -39,6 +40,7 @@
 		bottomLeft?: boolean;
 		bottomRight?: boolean;
 		onerror?: () => void;
+		oninteract?: () => void;
 		animal: string;
 		highlight?: boolean;
 	} = $props();
@@ -53,12 +55,14 @@
 
 	let el = $state<HTMLButtonElement>();
 	function toggleCell(): void {
+		oninteract?.();
 		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
 		if (cell.userstate !== 'crossed') playSound('scribble');
 		cell.userstate = cell.userstate === 'crossed' ? undefined : 'crossed';
 	}
 
 	function markCell(): void {
+		oninteract?.();
 		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
 		cell.userstate = cell.animal ? 'animal' : 'misflagged';
 		if (cell.animal) {
@@ -92,6 +96,7 @@
 	}
 
 	function applyDrag(row: number, column: number, action: DragAction): void {
+		oninteract?.();
 		const targetCell = board.cells[row]?.[column];
 		if (!targetCell || targetCell.userstate === 'animal' || targetCell.userstate === 'misflagged')
 			return;
@@ -102,6 +107,7 @@
 	}
 
 	function handleDragStart(event: Event): void {
+		oninteract?.();
 		if (cell.userstate === 'animal' || cell.userstate === 'misflagged') return;
 
 		event.preventDefault();
